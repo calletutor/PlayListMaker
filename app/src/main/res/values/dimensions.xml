@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_header">48dp</dimen>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="button_radius">16dp</dimen>
+    <dimen name="padding_icon">10dp</dimen>
+    <dimen name="margin_button">16dp</dimen>
+    <dimen name="padding_app">4dp</dimen>
+    <dimen name="padding_from_edges">12dp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
+    <dimen name="margin_elements">24dp</dimen>
+    <dimen name="icon_wrapper_size">24dp</dimen>
+    <dimen name="height_settings_elements">61dp</dimen>
+    <dimen name="height_button">0dp</dimen>
+    <dimen name="corner">18dp</dimen>
+    <dimen name="buttonTextSize">24sp</dimen>
+    <dimen name="iconPaddingSize">8dp</dimen>
+    <dimen name="lineHeight">61dp</dimen>
+    <dimen name="icoWidthHeight">24dp</dimen>
+    <dimen name="secondMenuTextSize">16sp</dimen>
+</resources>
