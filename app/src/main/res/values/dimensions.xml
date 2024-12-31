@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="buttonTextSize">24sp</dimen>
+    <dimen name="corners">16dp</dimen>
+    <dimen name="iconPadding">8dp</dimen>
+    <dimen name="padding_app">16dp</dimen>
+    <dimen name="padding_settings">24dp</dimen>
+    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
+</resources>
