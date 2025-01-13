@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ToolbarTitleTextStyle">
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="toolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="TextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingHorizontal">@dimen/padding_settings</item>
+        <item name="android:paddingVertical">@dimen/padding_settings</item>
+        <item name="android:textColor">@color/dark_light</item>
+        <item name="android:textSize">@dimen/secondary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+</resources>

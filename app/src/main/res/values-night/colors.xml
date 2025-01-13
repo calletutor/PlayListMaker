@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#1A1B22</color>
+    <color name="dark_light">@color/white</color>
+    <color name="dark_light2">@color/white</color>
+    <color name="search_dark_light_background">@color/black</color>
+    <color name="search_edit_text">@color/white</color>
+    <color name="x_color">@color/background</color>
+    <color name="zoom_icon_color">@color/background</color>
+</resources>
+

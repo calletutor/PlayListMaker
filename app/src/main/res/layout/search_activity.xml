@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/search_dark_light_background"
+    android:orientation="vertical"
+    tools:context=".SearchActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbarStyle"
+        android:layout_marginBottom="0dp"
+        app:navigationIcon="@drawable/arrow_back"
+        app:title="@string/search"
+    />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/padding_app"
+        android:layout_marginVertical="@dimen/iconPadding">
+
+        <EditText
+            android:id="@+id/searchInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="@dimen/iconPadding"
+            android:paddingStart="@dimen/iconPadding"
+            android:paddingEnd="@dimen/padding_settings"
+            android:fontFamily="@font/ys_display_regular"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/padding_app"
+            android:paddingVertical="@dimen/iconPadding"
+            android:textColor="@color/black"
+            android:textSize="@dimen/secondary_text_size"
+            android:hint="@string/hint"
+            android:background="@drawable/rounded_edittext"
+            android:textCursorDrawable="@drawable/cursor"
+            />
+
+        <ImageView
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:clickable="true"
+            android:padding="@dimen/padding_app"
+            android:src="@drawable/clear"
+            android:visibility="gone"
+        />
+    </FrameLayout>
+</LinearLayout>
