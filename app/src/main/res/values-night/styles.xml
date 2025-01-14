@@ -7,7 +7,7 @@
         <item name="android:clickable">true</item>
         <item name="android:paddingHorizontal">@dimen/padding_settings</item>
         <item name="android:paddingVertical">@dimen/padding_settings</item>
-        <item name="android:textColor">@color/dark_light</item>
+        <item name="android:textColor">@color/dual_color</item>
         <item name="android:textSize">@dimen/secondary_text_size</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>

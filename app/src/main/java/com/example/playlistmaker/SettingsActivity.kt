@@ -43,11 +43,16 @@ class SettingsActivity : AppCompatActivity() {
             val subject = getString(R.string.emailSubject)
             val body = getString(R.string.emailBody)
             val emailIntent = Intent(Intent.ACTION_SENDTO)
-            emailIntent.data = Uri.parse("mailto:")
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            emailIntent.putExtra(Intent.EXTRA_TEXT, body)
+
+            emailIntent.apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, body)
+            }
+
             startActivity(emailIntent)
+
         }
 
         userAgreement.setOnClickListener {

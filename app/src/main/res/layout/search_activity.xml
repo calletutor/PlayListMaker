@@ -5,7 +5,7 @@
     android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/search_dark_light_background"
+    android:background="@color/search_dual_color_background"
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
@@ -15,6 +15,8 @@
         android:layout_marginBottom="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search"
+        app:titleTextColor="@color/search_screen_title_color"
+        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
     />
 
     <FrameLayout
@@ -40,9 +42,10 @@
             android:textColor="@color/black"
             android:textSize="@dimen/secondary_text_size"
             android:hint="@string/hint"
+            android:textColorHint="@color/hint_text_color"
             android:background="@drawable/rounded_edittext"
             android:textCursorDrawable="@drawable/cursor"
-            />
+        />
 
         <ImageView
             android:id="@+id/clear_button"

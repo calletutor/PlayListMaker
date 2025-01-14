@@ -3,6 +3,5 @@
     <style name="Base.Theme.PlayListMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
     </style>
-
     <style name="Theme.PlayListMaker" parent="Base.Theme.PlayListMaker" />
 </resources>

@@ -46,11 +46,11 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString() != "") {
+                if (s.toString().isEmpty()) {
+                    clearButton.isVisible = false
+                } else {
                     clearButton.isVisible = true
                     currentText = inputEditText.text.toString()
-                } else {
-                    clearButton.isVisible = false
                 }
             }
         }

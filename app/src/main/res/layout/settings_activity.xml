@@ -14,9 +14,9 @@
         app:navigationIcon="@drawable/arrow_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/settings"
-        app:titleTextColor="@color/dark_light"
+        app:titleTextColor="@color/dual_color"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        />
+    />
 
     <androidx.appcompat.widget.SwitchCompat
         android:layout_width="match_parent"
@@ -25,30 +25,31 @@
         android:paddingHorizontal="@dimen/padding_settings"
         android:paddingVertical="@dimen/padding_settings"
         android:text="@string/dark_theme"
-        android:textColor="@color/dark_light"
+        android:textColor="@color/dual_color"
         android:textSize="@dimen/secondary_text_size"
         app:thumbTint="@color/switch_thumb_color"
         app:trackTint="@color/switch_track_color"
-        />
+    />
 
     <TextView
         android:id="@+id/shareApp"
         style="@style/TextStyle"
         android:text="@string/share"
-        app:drawableEndCompat="@drawable/share" />
+        app:drawableEndCompat="@drawable/share"
+    />
 
     <TextView
         android:id="@+id/messageToSupport"
         style="@style/TextStyle"
         android:text="@string/support"
         app:drawableEndCompat="@drawable/support"
-        />
+    />
 
     <TextView
         android:id="@+id/agreement"
         style="@style/TextStyle"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/arrow_right"
-        />
+    />
 
 </LinearLayout>
