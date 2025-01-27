@@ -13,6 +13,7 @@
     <color name="thumb_checked">@color/blue</color>
     <color name="dual_color">@color/black</color>
     <color name="dual_color2">@color/grey</color>
+    <color name="dual_color3">@color/thumb_unchecked</color>
     <color name="search_dual_color_background">@color/white</color>
     <color name="search_edit_text">@color/track_unchecked</color>
     <color name="zoom_icon_color">@color/thumb_unchecked</color>
