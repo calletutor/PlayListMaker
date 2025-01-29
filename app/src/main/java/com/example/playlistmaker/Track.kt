@@ -1,11 +1,8 @@
 package com.example.playlistmaker
 
 class Track(
-    var trackNumber: String,
-    var trackName: String,
-    var artistName: String,
-    var trackTime: String,
-    var trackPicRef: String
+    val trackName: String,
+    val artistName: String,
+    val trackTime: String,
+    val trackPicRef: String
 )
-
-
