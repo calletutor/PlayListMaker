@@ -17,7 +17,7 @@
         app:title="@string/search"
         app:titleTextColor="@color/search_screen_title_color"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        />
+    />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -48,6 +48,9 @@
             android:background="@drawable/rounded_edittext"
             android:textCursorDrawable="@drawable/cursor"
             android:layout_gravity="center_vertical"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+
         />
 
         <ImageView
@@ -74,6 +77,43 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+    />
+
+    <LinearLayout
+        android:id="@+id/placeholder_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="120dp"
+        >
+
+        <ImageView
+            android:id="@+id/errorImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="@dimen/error_text"
+            android:gravity="center"
+            android:paddingVertical="20dp"
+
         />
+
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            android:textSize="@dimen/refresh_text"
+            android:layout_gravity="center"
+            style="@style/refreshButton"
+        />
+
+    </LinearLayout>
 
 </LinearLayout>

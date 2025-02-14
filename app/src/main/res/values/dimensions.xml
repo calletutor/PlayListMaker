@@ -8,4 +8,6 @@
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="secondary_text_size">16sp</dimen>
     <dimen name="track_text_size">11sp</dimen>
+    <dimen name="error_text">20sp</dimen>
+    <dimen name="refresh_text">16sp</dimen>
 </resources>
