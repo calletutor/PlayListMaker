@@ -3,5 +3,5 @@
     <!-- Активное состояние (включен) -->
     <item android:color="@color/thumb_checked" android:state_checked="true" />
     <!-- Неактивное состояние (выключен) -->
-    <item android:color="@color/thumb_unchecked" android:state_checked="false" />
+    <item android:color="@color/grey" android:state_checked="false" />
 </selector>

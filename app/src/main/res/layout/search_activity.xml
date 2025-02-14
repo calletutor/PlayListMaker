@@ -17,13 +17,15 @@
         app:title="@string/search"
         app:titleTextColor="@color/search_screen_title_color"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-    />
+        />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/padding_app"
-        android:layout_marginVertical="@dimen/iconPadding">
+        android:padding="16dp"
+        android:layout_gravity="center"
+
+        >
 
         <EditText
             android:id="@+id/searchInputEditText"
@@ -45,17 +47,33 @@
             android:textColorHint="@color/hint_text_color"
             android:background="@drawable/rounded_edittext"
             android:textCursorDrawable="@drawable/cursor"
+            android:layout_gravity="center_vertical"
         />
 
         <ImageView
             android:id="@+id/clear_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
             android:clickable="true"
-            android:padding="@dimen/padding_app"
-            android:src="@drawable/clear"
+            android:src="@drawable/ic_clear"
+            android:padding="10dp"
             android:visibility="gone"
         />
+
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 </LinearLayout>
