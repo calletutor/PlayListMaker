@@ -16,4 +16,6 @@
     <string name="refresh">Обновить</string>
     <string name="searchFailed">Ничего не нашлось</string>
     <string name="connectionFaied">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
+    <string name="searchHistory">Вы искали</string>
+    <string name="clearSearchHistory">Очистить историю</string>
 </resources>
