@@ -9,12 +9,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+
+    lateinit var themeSwitcher: SwitchMaterial
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if (ScreenModeHandler.checkCurrentScreenMode(this) == 0) {
+            themeSwitcher.isChecked = true
+        } else {
+            themeSwitcher.isChecked = false
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.settings_activity)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -25,6 +41,29 @@ class SettingsActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+
+        themeSwitcher = findViewById(R.id.themeSwitcher)
+
+        themeSwitcher.setOnClickListener() {
+
+            val sharedPrefs = getSharedPreferences(DARK_THEME, MODE_PRIVATE)
+            if (themeSwitcher.isChecked) {
+                //пользователь включил темную тему
+                ScreenModeHandler.switchTheme(true)
+                //нужно сохранить состояние
+                sharedPrefs.edit()
+                    .putString(DARK_THEME, "true")
+            } else {
+                //пользователь включил светлую тему
+                ScreenModeHandler.switchTheme(false)
+                //нужно сохранить состояние
+                sharedPrefs.edit()
+                    .putString(DARK_THEME, "false")
+            }
+                .apply()
+        }
+
+        //themeSwitcher.setOnCheckedChangeListener { switcher, checked -> }
 
         val share = findViewById<TextView>(R.id.shareApp)
         val getSupport = findViewById<TextView>(R.id.messageToSupport)
