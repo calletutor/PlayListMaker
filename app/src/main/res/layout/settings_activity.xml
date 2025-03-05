@@ -27,7 +27,7 @@
         android:paddingVertical="@dimen/padding_settings"
         android:text="@string/dark_theme"
         android:textColor="@color/dual_color"
-        android:textSize="@dimen/secondary_text_size"
+        android:textSize="@dimen/text_size_16"
         app:thumbTint="@color/switch_thumb_color"
         app:trackTint="@color/switch_track_color" />
 

@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -25,24 +26,26 @@ class TracksAdapter(
 
         holder.itemView.setOnClickListener {
 
-            var maxHistoryItems = 10
+            val maxHistoryItems = 10
 
             val sharedPreferences =
                 holder.itemView.context.getSharedPreferences("tracksHistory", Context.MODE_PRIVATE)
             val jsonString = sharedPreferences.getString("tracksHistory", null)
 
-            var trackListType: Type?
-            var trackListHistory: MutableList<Track>? = null // Инициализируем как null
+            val trackListType: Type?
+            val trackListHistory: MutableList<Track>? //= null // Инициализируем как null
 
             if (!jsonString.isNullOrEmpty()) {
-                //истрория существует
+                //история существует
                 trackListType = object : TypeToken<MutableList<Track>>() {}.type
                 trackListHistory = Gson().fromJson(jsonString, trackListType)
 
                 if (!trackListHistory.isNullOrEmpty()) {
 
-                    if (!trackListHistory.any { it.trackId == tracks[position].trackId }) {
+                    //история поиска существует
 
+                    if (!trackListHistory.any { it.trackId == tracks[position].trackId }) {
+                        //данного трека не было в истории, значит добавляем его в историю поиска
                         trackListHistory.add(0, tracks[position])
 
                     } else {
@@ -62,13 +65,21 @@ class TracksAdapter(
                 }
             } else {
                 //истории пока не было
-                var trackListHistory: MutableList<Track> = mutableListOf()
+                trackListHistory = mutableListOf()
+                //val trackListHistory: MutableList<Track> = mutableListOf()
                 trackListHistory.add(tracks[position])
                 val jsonTracksHistory: String = Gson().toJson(trackListHistory)
                 sharedPreferences.edit()
                     .putString("tracksHistory", jsonTracksHistory)
                     .apply()
             }
+            ////////////////////////////////////////////////////
+            //нужно открывать AudioPlayerActivity
+            val audioPlayerIntent = Intent(holder.itemView.context, AudioPlayerActivity::class.java)
+            val currentTrackData: String = Gson().toJson(tracks[position])
+            audioPlayerIntent.putExtra("currentTrackData", currentTrackData)
+            holder.itemView.context.startActivity(audioPlayerIntent)
+            ////////////////////////////////////////////////////
         }
     }
 

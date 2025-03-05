@@ -88,7 +88,7 @@ class SearchActivity : AppCompatActivity() {
         lateinit var trackListType: Type
         var jsonString: String?
 
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
 
                 sharedPreferences = getSharedPreferences("tracksHistory", Context.MODE_PRIVATE)
@@ -229,7 +229,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun searchAttempt() {
+    private fun searchAttempt() {
 
         imdbService.search(inputEditText.text.toString()).enqueue(object :
             Callback<TracksResponse> {

@@ -6,7 +6,8 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.appcompat.app.AppCompatDelegate
 
-class ScreenModeHandler(private val context: Context) {
+class ScreenModeHandler {
+//class ScreenModeHandler(private val context: Context) {
 
     companion object {
         fun switchTheme(darkThemeEnabled: Boolean) {
@@ -26,12 +27,12 @@ class ScreenModeHandler(private val context: Context) {
 
             if (currentMode == Configuration.UI_MODE_TYPE_NORMAL) {
                 // Проверяем, темная ли тема
-                if ((context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+                return if ((context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
                     // Темная тема активна
-                    return 0
+                    0
                 } else {
                     // Светлая тема активна
-                    return 1
+                    1
                 }
             }
             return -1
@@ -44,11 +45,7 @@ class ScreenModeHandler(private val context: Context) {
 
             if (!sharedPrefs.getString(DARK_THEME, "").isNullOrEmpty()) {
                 //сведения по теме экрана были ранее сохранены пользователем
-                if (sharedPrefs.getString(DARK_THEME, "") == "true") {
-                    darkTheme = true
-                } else {
-                    darkTheme = false
-                }
+                darkTheme = sharedPrefs.getString(DARK_THEME, "") == "true"
                 switchTheme(darkTheme)
             } else {
                 //сведения по теме экрана ранее не были еще сохранены пользователем

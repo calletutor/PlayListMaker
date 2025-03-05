@@ -18,4 +18,11 @@
     <string name="connectionFaied">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="searchHistory">Вы искали</string>
     <string name="clearSearchHistory">Очистить историю</string>
+
+    <string name="time">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+
 </resources>

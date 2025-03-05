@@ -13,17 +13,13 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
-    lateinit var themeSwitcher: SwitchMaterial
+    private lateinit var themeSwitcher: SwitchMaterial
 
     override fun onResume() {
 
         super.onResume()
 
-        if (ScreenModeHandler.checkCurrentScreenMode(this) == 0) {
-            themeSwitcher.isChecked = true
-        } else {
-            themeSwitcher.isChecked = false
-        }
+        themeSwitcher.isChecked = ScreenModeHandler.checkCurrentScreenMode(this) == 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
         themeSwitcher = findViewById(R.id.themeSwitcher)
 
-        themeSwitcher.setOnClickListener() {
+        themeSwitcher.setOnClickListener {
 
             val sharedPrefs = getSharedPreferences(DARK_THEME, MODE_PRIVATE)
             if (themeSwitcher.isChecked) {

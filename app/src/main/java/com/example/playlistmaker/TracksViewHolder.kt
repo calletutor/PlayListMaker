@@ -29,19 +29,17 @@ class TracksViewHolder(item: View): RecyclerView.ViewHolder(item) {
             trackTime.text = model.trackTimeMillis // Значение по умолчанию при ошибке
         }
 
-        //trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
-        //trackTime.text = model.trackTimeMillis
-
         Glide.with(itemView)
             .load(model.artworkUrl100)
-            .centerCrop()
+            .fitCenter()
+            //.centerCrop()
             .transform(RoundedCorners(dpToPx(2f,itemView.context)))
             .placeholder(R.drawable.place_holder)
             .into(imageView)
 
     }
 
-    fun dpToPx(dp: Float, context: Context): Int {
+    private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
