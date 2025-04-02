@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.appcompat.app.AppCompatDelegate
 
 class ScreenModeHandler {
-//class ScreenModeHandler(private val context: Context) {
 
     companion object {
         fun switchTheme(darkThemeEnabled: Boolean) {
@@ -40,16 +39,12 @@ class ScreenModeHandler {
 
         fun setCurrentScreenMode(context: Context) {
 
-            val darkTheme: Boolean?
-            val sharedPrefs = context.getSharedPreferences(DARK_THEME, MODE_PRIVATE)
+            val sharedPrefs = context.getSharedPreferences(DARK_THEME, Context.MODE_PRIVATE)
 
-            if (!sharedPrefs.getString(DARK_THEME, "").isNullOrEmpty()) {
+            if (sharedPrefs.getBoolean(DARK_THEME, false) == true) {
                 //сведения по теме экрана были ранее сохранены пользователем
-                darkTheme = sharedPrefs.getString(DARK_THEME, "") == "true"
-                switchTheme(darkTheme)
-            } else {
-                //сведения по теме экрана ранее не были еще сохранены пользователем
-                //do nothing
+                //   иначе настройка приложения соответсвтуют настройке системы
+                switchTheme(sharedPrefs.getBoolean(DARK_THEME, false) == true)
             }
         }
     }

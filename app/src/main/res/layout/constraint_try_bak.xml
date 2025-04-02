@@ -4,102 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/audio_player"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextAppearance="@style/ToolbarTitleTextStyle" />
+        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
-    <!--android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"-->
+        />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_to_the_edge"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="@dimen/margin_to_the_edge"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/trackName"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@drawable/place_holder2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:srcCompat="@drawable/place_holder2" />
-
-    <TextView
-        android:id="@+id/trackName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_to_the_edge"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/ys_display_medium"
-        android:hint="trackName"
-        android:maxLines="1"
-        android:textColor="@color/dual_color"
-        android:textSize="@dimen/text_size_22"
-        app:layout_constraintBottom_toTopOf="@id/artistName"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/artistName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_to_the_edge"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/ys_display_medium"
-        android:hint="artistName"
-        android:maxLines="1"
-        android:textColor="@color/dual_color"
-        android:textSize="@dimen/text_size_14"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/playImage"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginBottom="20dp"
+        />
 
-    <!--android:layout_marginStart="80dp"-->
-    <!--app:layout_constraintStart_toEndOf="@id/playImage"-->
+
     <ImageView
         android:id="@+id/favoritesImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_to_the_edge"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/favorites_button"
+        android:layout_marginStart="50dp"
+        app:layout_constraintTop_toTopOf="@id/playImage"
         app:layout_constraintBottom_toBottomOf="@id/playImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playImage" />
+        app:layout_constraintStart_toEndOf="@id/playImage"
+
+        />
 
     <ImageView
         android:id="@+id/playImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/play_button"
-        app:layout_constraintBottom_toTopOf="@id/playTime"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/playTime"
+        android:layout_marginBottom="36dp"
 
-    <!--android:layout_marginEnd="80dp"-->
+        />
 
     <ImageView
         android:id="@+id/addImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_to_the_edge"
+        android:layout_marginEnd="50dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/add_button"
+        app:layout_constraintTop_toTopOf="@id/playImage"
         app:layout_constraintBottom_toBottomOf="@id/playImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playImage" />
+        app:layout_constraintEnd_toStartOf="@id/playImage"
+        />
 
 
     <!--android:text="0:30"-->
@@ -111,9 +82,10 @@
         android:fontFamily="@font/ys_display_medium"
         android:textColor="@color/dual_color"
         android:textSize="@dimen/text_size_14"
-        app:layout_constraintBottom_toTopOf="@id/trackTime2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/trackTime2"
+        />
 
     <TextView
         android:id="@+id/trackTime2"
@@ -122,12 +94,13 @@
         android:layout_marginStart="@dimen/margin_to_the_edge"
         android:layout_marginBottom="@dimen/margin_to_the_bottom"
         android:fontFamily="@font/ys_display_regular"
-        android:hint="@string/time"
         android:text="@string/time"
+        android:hint="@string/time"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/album2"
-        app:layout_constraintStart_toStartOf="parent" />
+        />
 
     <TextView
         android:id="@+id/album2"
@@ -136,12 +109,13 @@
         android:layout_marginStart="@dimen/margin_to_the_edge"
         android:layout_marginBottom="@dimen/margin_to_the_bottom"
         android:fontFamily="@font/ys_display_regular"
-        android:hint="@string/album"
         android:text="@string/album"
+        android:hint="@string/album"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/year2"
-        app:layout_constraintStart_toStartOf="parent" />
+        />
 
     <TextView
         android:id="@+id/year2"
@@ -150,12 +124,13 @@
         android:layout_marginStart="@dimen/margin_to_the_edge"
         android:layout_marginBottom="@dimen/margin_to_the_bottom"
         android:fontFamily="@font/ys_display_regular"
-        android:hint="@string/year"
         android:text="@string/year"
+        android:hint="@string/year"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/genre2"
-        app:layout_constraintStart_toStartOf="parent" />
+        />
 
     <TextView
         android:id="@+id/genre2"
@@ -164,12 +139,13 @@
         android:layout_marginStart="@dimen/margin_to_the_edge"
         android:layout_marginBottom="@dimen/margin_to_the_bottom"
         android:fontFamily="@font/ys_display_regular"
-        android:hint="@string/genre"
         android:text="@string/genre"
+        android:hint="@string/genre"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/country2"
-        app:layout_constraintStart_toStartOf="parent" />
+        />
 
     <TextView
         android:id="@+id/country2"
@@ -179,12 +155,13 @@
         android:layout_marginBottom="@dimen/margin_to_the_bottom_edge"
         android:fontFamily="@font/ys_display_regular"
         android:gravity="start"
-        android:hint="@string/country"
         android:text="@string/country"
+        android:hint="@string/country"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <TextView
         android:id="@+id/trackTime"
@@ -197,8 +174,9 @@
         android:hint="@string/time_hint"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/album"
-        app:layout_constraintEnd_toEndOf="parent" />
+        />
 
     <TextView
         android:id="@+id/album"
@@ -211,8 +189,9 @@
         android:hint="@string/album_hint"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/year"
-        app:layout_constraintEnd_toEndOf="parent" />
+         />
 
     <TextView
         android:id="@+id/year"
@@ -225,8 +204,9 @@
         android:hint="@string/year_hint"
         android:textColor="@color/dual_color"
         android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/genre"
-        app:layout_constraintEnd_toEndOf="parent" />
+        />
 
     <TextView
         android:id="@+id/genre"
@@ -240,7 +220,8 @@
         android:textColor="@color/dual_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/country"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <TextView
         android:id="@+id/country"
@@ -254,6 +235,7 @@
         android:textColor="@color/dual_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
