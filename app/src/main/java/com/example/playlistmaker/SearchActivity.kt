@@ -236,6 +236,8 @@ class SearchActivity : AppCompatActivity() {
             ) {
                 if (response.code() == 200) {
 
+                    progressBar.visibility = View.INVISIBLE
+
                     if (response.body()?.results?.isNotEmpty() == true) {
 
                         trackList.addAll(response.body()?.results!!)
@@ -254,6 +256,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+
+                progressBar.visibility = View.INVISIBLE
+
                 searchFailedTextView.setText(R.string.connectionFaied)
                 searchFailedImage.setImageResource(R.drawable.ic_no_connecton)
                 searchFailedImage.visibility = View.VISIBLE
@@ -261,9 +266,6 @@ class SearchActivity : AppCompatActivity() {
                 refreshButton.visibility = View.VISIBLE
             }
         })
-
-        //hideKeyboardFromEditText(inputEditText.context, inputEditText)
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
