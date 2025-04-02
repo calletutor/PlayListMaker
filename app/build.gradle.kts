@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.ui.text.android)
     testImplementation(libs.junit)
     implementation(libs.material.v161)
     implementation(libs.glide)
