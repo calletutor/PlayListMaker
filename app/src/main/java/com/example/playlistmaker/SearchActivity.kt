@@ -103,8 +103,8 @@ class SearchActivity : AppCompatActivity() {
         searchFailedImage = findViewById(R.id.searchFailedImage)
         refreshButton = findViewById(R.id.refreshButton)
         searchFailedTextView = findViewById(R.id.errorMessage)
-        refreshButton.visibility = View.INVISIBLE
-        searchFailedTextView.visibility = View.INVISIBLE
+        refreshButton.visibility = View.GONE
+        searchFailedTextView.visibility = View.GONE
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -117,7 +117,6 @@ class SearchActivity : AppCompatActivity() {
                 showTrackListHistory()
             }
         }
-
 
         val textWatcher = object : TextWatcher {
 
@@ -134,8 +133,10 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.text.isEmpty()) {
 
                     //поле пустое
+                    handler.removeCallbacks(searchRunnable) //критическое замечание
+                    progressBar.visibility = View.GONE //критическое замечание
 
-                    clearButton.visibility = View.INVISIBLE
+                    clearButton.visibility = View.GONE
 
                     sharedPreferences = getSharedPreferences(TRACK_HISTORY, Context.MODE_PRIVATE)
                     jsonString = sharedPreferences.getString(TRACK_HISTORY, null)
@@ -156,11 +157,11 @@ class SearchActivity : AppCompatActivity() {
                     trackList.clear()
                     tracksAdapter = TracksAdapter(trackList)
                     recyclerView.adapter = tracksAdapter
-                    clearHistoryButton.visibility = View.INVISIBLE
-                    searchHistoryTitle.visibility = View.INVISIBLE
-                    searchFailedImage.visibility = View.INVISIBLE
-                    searchFailedTextView.visibility = View.INVISIBLE
-                    refreshButton.visibility = View.INVISIBLE
+                    clearHistoryButton.visibility = View.GONE
+                    searchHistoryTitle.visibility = View.GONE
+                    searchFailedImage.visibility = View.GONE
+                    searchFailedTextView.visibility = View.GONE
+                    refreshButton.visibility = View.GONE
 
                     if (s.toString().isEmpty()) {
                         clearButton.isVisible = false
@@ -191,16 +192,16 @@ class SearchActivity : AppCompatActivity() {
                 .clear()
                 .apply()
 
-            clearHistoryButton.visibility = View.INVISIBLE
-            searchHistoryTitle.visibility = View.INVISIBLE
+            clearHistoryButton.visibility = View.GONE
+            searchHistoryTitle.visibility = View.GONE
 
         }
 
         refreshButton.setOnClickListener {
 
-            searchFailedImage.visibility = View.INVISIBLE
-            searchFailedTextView.visibility = View.INVISIBLE
-            refreshButton.visibility = View.INVISIBLE
+            searchFailedImage.visibility = View.GONE
+            searchFailedTextView.visibility = View.GONE
+            refreshButton.visibility = View.GONE
 
             if (inputEditText.text.isNotEmpty()) {
 
@@ -210,18 +211,24 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
-
             trackList.clear()
             tracksAdapter.notifyDataSetChanged()
-            searchFailedTextView.visibility = View.INVISIBLE
-            searchFailedImage.visibility = View.INVISIBLE
+            searchFailedTextView.visibility = View.GONE
+            searchFailedImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE//здесь был баг
             inputEditText.setText("")
-            clearButton.visibility = View.INVISIBLE
+            clearButton.visibility = View.GONE
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(inputEditText.windowToken, 0)
             inputEditText.clearFocus()
-
+            handler.removeCallbacks(searchRunnable)//критическое замечание
+            progressBar.visibility = View.GONE//критическое замечание
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
     }
 
     private fun searchAttempt() {
@@ -234,30 +241,34 @@ class SearchActivity : AppCompatActivity() {
                 call: Call<TracksResponse>,
                 response: Response<TracksResponse>
             ) {
-                if (response.code() == 200) {
 
-                    progressBar.visibility = View.INVISIBLE
+                //ответ от сервера получен
+                progressBar.visibility = View.GONE
 
-                    if (response.body()?.results?.isNotEmpty() == true) {
+                if (!inputEditText.text.isNullOrEmpty()) {//критическое замечание
 
-                        trackList.addAll(response.body()?.results!!)
-                        tracksAdapter = TracksAdapter(trackList)
-                        recyclerView.adapter = tracksAdapter
+                    if (response.code() == 200) {
+                        if (response.body()?.results?.isNotEmpty() == true) {
 
-                    }
+                            trackList.addAll(response.body()?.results!!)
+                            tracksAdapter = TracksAdapter(trackList)
+                            recyclerView.adapter = tracksAdapter
 
-                    if (trackList.isEmpty()) {
-                        searchFailedTextView.setText(R.string.searchFailed)
-                        searchFailedImage.setImageResource(R.drawable.ic_not_found)
-                        searchFailedImage.visibility = View.VISIBLE
-                        searchFailedTextView.visibility = View.VISIBLE
+                        }
+
+                        if (trackList.isEmpty()) {
+                            searchFailedTextView.setText(R.string.searchFailed)
+                            searchFailedImage.setImageResource(R.drawable.ic_not_found)
+                            searchFailedImage.visibility = View.VISIBLE
+                            searchFailedTextView.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
 
             override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
 
-                progressBar.visibility = View.INVISIBLE
+                progressBar.visibility = View.GONE
 
                 searchFailedTextView.setText(R.string.connectionFaied)
                 searchFailedImage.setImageResource(R.drawable.ic_no_connecton)
