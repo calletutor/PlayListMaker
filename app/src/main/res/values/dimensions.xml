@@ -15,4 +15,10 @@
     <dimen name="text_size_19">19sp</dimen>
     <dimen name="text_size_20">20sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
+
+    <dimen name="margin_to_the_edge">32sp</dimen>
+    <dimen name="margin_to_the_bottom">12sp</dimen>
+
+    <dimen name="margin_to_the_bottom_edge">24sp</dimen>
+
 </resources>

@@ -25,4 +25,10 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
 
+    <string name="time_hint">time</string>
+    <string name="album_hint">album</string>
+    <string name="year_hint">year</string>
+    <string name="genre_hint">genre</string>
+    <string name="country_hint">country</string>
+
 </resources>
