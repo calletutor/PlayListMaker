@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.content.Context
 import android.media.MediaPlayer
@@ -17,6 +17,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.CURRENT_TRACK_DATA
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -33,7 +36,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     var totalPlayTimeElapsed = 0
-    private var mainThreadHandler: Handler? = null//+
+    private var mainThreadHandler: Handler? = null
     private var mediaPlayer = MediaPlayer()
     var currentTrack: Track? = null
     private var playerState = STATE_DEFAULT
@@ -56,7 +59,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         playImage = findViewById(R.id.playImage)
 
-        mainThreadHandler = Handler(Looper.getMainLooper())//+
+        mainThreadHandler = Handler(Looper.getMainLooper())
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         val imageView: ImageView = findViewById(R.id.imageView)
         val trackName: TextView = findViewById(R.id.trackName)
@@ -68,7 +71,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         val country: TextView = findViewById(R.id.country)
 
         playImage.setOnClickListener {
-            // Обработка нажатия на кнопку воспроизведения
             playbackControl()
         }
 
@@ -83,8 +85,9 @@ class AudioPlayerActivity : AppCompatActivity() {
             intent.getParcelableExtra(CURRENT_TRACK_DATA)
         }
 
-        preparePlayer(currentTrack!!)
-
+        currentTrack?.let { track ->
+            preparePlayer(track)
+        }
 
         val tempURI = currentTrack?.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
         Glide.with(imageView)
@@ -94,19 +97,18 @@ class AudioPlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.place_holder)
             .into(imageView)
 
-        //нужно распределить содержимое currentTrack по соответствующим элементам лэйаута
-        if (currentTrack != null) {
-            trackName.text = currentTrack!!.trackName
-            artistName.text = currentTrack!!.artistName
-            album.text = currentTrack!!.collectionName
-            country.text = currentTrack!!.country
-            genre.text = currentTrack!!.primaryGenreName
-            year.text = currentTrack!!.releaseDate.take(4)
+        currentTrack?.let { track ->
+            trackName.text = track.trackName
+            artistName.text = track.artistName
+            album.text = track.collectionName
+            country.text = track.country
+            genre.text = track.primaryGenreName
+            year.text = track.releaseDate.take(4)
+        }
 
-            trackTime.text = SimpleDateFormat(
-                "mm:ss",
-                Locale.getDefault()
-            ).format(currentTrack!!.trackTimeMillis.toLong())
+        currentTrack?.trackTimeMillis?.toLongOrNull()?.let { timeMillis ->
+            val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
+            trackTime.text = formattedTime
         }
     }
 
@@ -144,20 +146,16 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(currentTrack.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            //play.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            //play.text = "PLAY"
             playImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.play_button))
             playerState = STATE_PREPARED
-            //playTime.setText("00:00");
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        //play.text = "PAUSE"
         playImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.pause_button_light))
         if (playerState != STATE_PAUSED) {
             totalPlayTimeElapsed = 0
@@ -168,7 +166,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        //play.text = "PLAY"
         playImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.play_button))
         playerState = STATE_PAUSED
     }
@@ -195,7 +192,7 @@ class AudioPlayerActivity : AppCompatActivity() {
                     "%02d:%02d",
                     totalPlayTimeElapsed / 60,
                     totalPlayTimeElapsed % 60
-                )//+
+                )
 
                 mainThreadHandler?.postDelayed(this, DELAY)
             }

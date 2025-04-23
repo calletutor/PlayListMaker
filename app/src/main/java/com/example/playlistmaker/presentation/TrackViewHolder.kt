@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.content.Context
 import android.util.TypedValue
@@ -8,10 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TracksViewHolder(item: View) : RecyclerView.ViewHolder(item) {
+class TrackViewHolder(item: View) : RecyclerView.ViewHolder(item) {
 
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
     private val artistName: TextView = itemView.findViewById(R.id.artistName)
@@ -29,7 +31,7 @@ class TracksViewHolder(item: View) : RecyclerView.ViewHolder(item) {
                 Locale.getDefault()
             ).format(model.trackTimeMillis.toLong())
         } catch (e: Exception) {
-            trackTime.text = model.trackTimeMillis // Значение по умолчанию при ошибке
+            trackTime.text = model.trackTimeMillis
         }
 
         Glide.with(itemView)
