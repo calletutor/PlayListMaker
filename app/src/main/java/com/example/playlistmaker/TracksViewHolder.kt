@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TracksViewHolder(item: View): RecyclerView.ViewHolder(item) {
+class TracksViewHolder(item: View) : RecyclerView.ViewHolder(item) {
 
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
     private val artistName: TextView = itemView.findViewById(R.id.artistName)
@@ -24,7 +24,10 @@ class TracksViewHolder(item: View): RecyclerView.ViewHolder(item) {
         artistName.text = model.artistName
 
         try {
-            trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis.toLong())
+            trackTime.text = SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(model.trackTimeMillis.toLong())
         } catch (e: Exception) {
             trackTime.text = model.trackTimeMillis // Значение по умолчанию при ошибке
         }
@@ -32,8 +35,7 @@ class TracksViewHolder(item: View): RecyclerView.ViewHolder(item) {
         Glide.with(itemView)
             .load(model.artworkUrl100)
             .fitCenter()
-            //.centerCrop()
-            .transform(RoundedCorners(dpToPx(2f,itemView.context)))
+            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .placeholder(R.drawable.place_holder)
             .into(imageView)
 
@@ -43,6 +45,7 @@ class TracksViewHolder(item: View): RecyclerView.ViewHolder(item) {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
-            context.resources.displayMetrics).toInt()
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

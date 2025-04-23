@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -30,8 +33,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 
+private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
 class SearchActivity : AppCompatActivity() {
 
+    lateinit var trackListType: Type
+    var jsonString: String? = null
+    lateinit var sharedPreferences: SharedPreferences
     private val itunesBaseUrl = "https://itunes.apple.com"
 
     private val retrofit = Retrofit.Builder()
@@ -50,10 +58,29 @@ class SearchActivity : AppCompatActivity() {
     lateinit var searchFailedTextView: TextView
     private lateinit var inputEditText: EditText
     private var currentText: String? = null
-    lateinit var recyclerView:RecyclerView
+    lateinit var recyclerView: RecyclerView
+    lateinit var progressBar: ProgressBar
 
     companion object {
         const val EDIT_TEXT = "EDIT_TEXT"
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if (inputEditText.isFocused() && inputEditText.text.isEmpty()) {
+            showTrackListHistory()
+        }
+    }
+
+    val handler = Handler(Looper.getMainLooper())
+
+    private val searchRunnable = Runnable { searchAttempt() }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -68,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        progressBar = findViewById(R.id.progressBar)
         clearHistoryButton = findViewById(R.id.clearHistory)
         searchHistoryTitle = findViewById(R.id.searchHistoryTitle)
         inputEditText = findViewById(R.id.searchInputEditText)
@@ -75,8 +103,8 @@ class SearchActivity : AppCompatActivity() {
         searchFailedImage = findViewById(R.id.searchFailedImage)
         refreshButton = findViewById(R.id.refreshButton)
         searchFailedTextView = findViewById(R.id.errorMessage)
-        refreshButton.visibility = View.INVISIBLE
-        searchFailedTextView.visibility = View.INVISIBLE
+        refreshButton.visibility = View.GONE
+        searchFailedTextView.visibility = View.GONE
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -84,47 +112,10 @@ class SearchActivity : AppCompatActivity() {
         tracksAdapter = TracksAdapter(trackList)
         recyclerView.adapter = tracksAdapter
 
-        lateinit var sharedPreferences: SharedPreferences
-        lateinit var trackListType: Type
-        var jsonString: String?
-
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
-
-                sharedPreferences = getSharedPreferences("tracksHistory", Context.MODE_PRIVATE)
-                jsonString = sharedPreferences.getString("tracksHistory", null)
-
-                if (!jsonString.isNullOrEmpty()) {
-
-                    trackListType = object : TypeToken<MutableList<Track>>() {}.type
-                    trackList = Gson().fromJson(jsonString, trackListType)
-
-                    tracksAdapter = TracksAdapter(trackList)
-                    recyclerView.adapter = tracksAdapter
-
-                    clearHistoryButton.visibility = View.VISIBLE
-                    searchHistoryTitle.visibility = View.VISIBLE
-
-                }
+                showTrackListHistory()
             }
-        }
-
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                trackList.clear()
-                tracksAdapter.notifyDataSetChanged()
-
-                searchHistoryTitle.visibility = View.INVISIBLE
-                clearHistoryButton.visibility = View.INVISIBLE
-
-                if (inputEditText.text.isNotEmpty()) {
-
-                    searchAttempt()
-
-                }
-            }
-            false
         }
 
         val textWatcher = object : TextWatcher {
@@ -141,33 +132,36 @@ class SearchActivity : AppCompatActivity() {
 
                 if (inputEditText.text.isEmpty()) {
 
-                    clearButton.visibility = View.INVISIBLE
+                    //поле пустое
+                    handler.removeCallbacks(searchRunnable) //критическое замечание
+                    progressBar.visibility = View.GONE //критическое замечание
 
-                    sharedPreferences = getSharedPreferences("tracksHistory", Context.MODE_PRIVATE)
-                    jsonString = sharedPreferences.getString("tracksHistory", null)
+                    clearButton.visibility = View.GONE
+
+                    sharedPreferences = getSharedPreferences(TRACK_HISTORY, Context.MODE_PRIVATE)
+                    jsonString = sharedPreferences.getString(TRACK_HISTORY, null)
 
                     if (!jsonString.isNullOrEmpty()) {
                         trackListType = object : TypeToken<MutableList<Track>>() {}.type
                         trackList = Gson().fromJson(jsonString, trackListType)
                         tracksAdapter = TracksAdapter(trackList)
                         recyclerView.adapter = tracksAdapter
-                        //tracksAdapter.notifyDataSetChanged()
                         clearHistoryButton.visibility = View.VISIBLE
                         searchHistoryTitle.visibility = View.VISIBLE
                     }
 
                 } else {
 
+                    //поле не пустое
+
                     trackList.clear()
                     tracksAdapter = TracksAdapter(trackList)
                     recyclerView.adapter = tracksAdapter
-                    //tracksAdapter.notifyDataSetChanged()
-                    clearHistoryButton.visibility = View.INVISIBLE
-                    searchHistoryTitle.visibility = View.INVISIBLE
-
-                    searchFailedImage.visibility = View.INVISIBLE
-                    searchFailedTextView.visibility = View.INVISIBLE
-                    refreshButton.visibility = View.INVISIBLE
+                    clearHistoryButton.visibility = View.GONE
+                    searchHistoryTitle.visibility = View.GONE
+                    searchFailedImage.visibility = View.GONE
+                    searchFailedTextView.visibility = View.GONE
+                    refreshButton.visibility = View.GONE
 
                     if (s.toString().isEmpty()) {
                         clearButton.isVisible = false
@@ -175,6 +169,9 @@ class SearchActivity : AppCompatActivity() {
                         clearButton.isVisible = true
                         currentText = inputEditText.text.toString()
                     }
+
+                    searchDebounce()
+
                 }
             }
         }
@@ -188,7 +185,6 @@ class SearchActivity : AppCompatActivity() {
 
         clearHistoryButton.setOnClickListener {
             trackList.clear()
-            //tracksAdapter.notifyDataSetChanged()
             tracksAdapter = TracksAdapter(trackList)
             recyclerView.adapter = tracksAdapter
 
@@ -196,16 +192,16 @@ class SearchActivity : AppCompatActivity() {
                 .clear()
                 .apply()
 
-            clearHistoryButton.visibility = View.INVISIBLE
-            searchHistoryTitle.visibility = View.INVISIBLE
+            clearHistoryButton.visibility = View.GONE
+            searchHistoryTitle.visibility = View.GONE
 
         }
 
         refreshButton.setOnClickListener {
 
-            searchFailedImage.visibility = View.INVISIBLE
-            searchFailedTextView.visibility = View.INVISIBLE
-            refreshButton.visibility = View.INVISIBLE
+            searchFailedImage.visibility = View.GONE
+            searchFailedTextView.visibility = View.GONE
+            refreshButton.visibility = View.GONE
 
             if (inputEditText.text.isNotEmpty()) {
 
@@ -215,21 +211,29 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
-
             trackList.clear()
             tracksAdapter.notifyDataSetChanged()
-            searchFailedTextView.visibility = View.INVISIBLE
-            searchFailedImage.visibility = View.INVISIBLE
+            searchFailedTextView.visibility = View.GONE
+            searchFailedImage.visibility = View.GONE
+            refreshButton.visibility = View.GONE//здесь был баг
             inputEditText.setText("")
-            clearButton.visibility = View.INVISIBLE
+            clearButton.visibility = View.GONE
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(inputEditText.windowToken, 0)
             inputEditText.clearFocus()
-
+            handler.removeCallbacks(searchRunnable)//критическое замечание
+            progressBar.visibility = View.GONE//критическое замечание
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
+    }
+
     private fun searchAttempt() {
+
+        progressBar.visibility = View.VISIBLE
 
         imdbService.search(inputEditText.text.toString()).enqueue(object :
             Callback<TracksResponse> {
@@ -237,27 +241,35 @@ class SearchActivity : AppCompatActivity() {
                 call: Call<TracksResponse>,
                 response: Response<TracksResponse>
             ) {
-                if (response.code() == 200) {
 
-                    if (response.body()?.results?.isNotEmpty() == true) {
+                //ответ от сервера получен
+                progressBar.visibility = View.GONE
 
-                        trackList.addAll(response.body()?.results!!)
-                        tracksAdapter = TracksAdapter(trackList)
-                        recyclerView.adapter = tracksAdapter
+                if (!inputEditText.text.isNullOrEmpty()) {//критическое замечание
 
-                        //tracksAdapter.notifyDataSetChanged()
-                    }
+                    if (response.code() == 200) {
+                        if (response.body()?.results?.isNotEmpty() == true) {
 
-                    if (trackList.isEmpty()) {
-                        searchFailedTextView.setText(R.string.searchFailed)
-                        searchFailedImage.setImageResource(R.drawable.ic_not_found)
-                        searchFailedImage.visibility = View.VISIBLE
-                        searchFailedTextView.visibility = View.VISIBLE
+                            trackList.addAll(response.body()?.results!!)
+                            tracksAdapter = TracksAdapter(trackList)
+                            recyclerView.adapter = tracksAdapter
+
+                        }
+
+                        if (trackList.isEmpty()) {
+                            searchFailedTextView.setText(R.string.searchFailed)
+                            searchFailedImage.setImageResource(R.drawable.ic_not_found)
+                            searchFailedImage.visibility = View.VISIBLE
+                            searchFailedTextView.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
 
             override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+
+                progressBar.visibility = View.GONE
+
                 searchFailedTextView.setText(R.string.connectionFaied)
                 searchFailedImage.setImageResource(R.drawable.ic_no_connecton)
                 searchFailedImage.visibility = View.VISIBLE
@@ -276,5 +288,24 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         currentText = savedInstanceState.getString(EDIT_TEXT)
         inputEditText.setText(currentText)
+    }
+
+    fun showTrackListHistory() {
+
+        sharedPreferences = getSharedPreferences(TRACK_HISTORY, Context.MODE_PRIVATE)
+        jsonString = sharedPreferences.getString(TRACK_HISTORY, null)
+
+        if (!jsonString.isNullOrEmpty()) {
+
+            trackListType = object : TypeToken<MutableList<Track>>() {}.type
+            trackList = Gson().fromJson(jsonString, trackListType)
+
+            tracksAdapter = TracksAdapter(trackList)
+            recyclerView.adapter = tracksAdapter
+
+            clearHistoryButton.visibility = View.VISIBLE
+            searchHistoryTitle.visibility = View.VISIBLE
+
+        }
     }
 }

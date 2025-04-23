@@ -5,6 +5,7 @@
     <color name="dual_color2">@color/white</color>
     <color name="dual_color3">@color/white</color>
     <color name="dual_color4">@color/black</color>
+    <color name="dual_color5">@color/black</color>
     <color name="search_dual_color_background">@color/black</color>
     <color name="search_edit_text">@color/white</color>
     <color name="x_color">@color/black</color>

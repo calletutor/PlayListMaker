@@ -48,18 +48,16 @@ class SettingsActivity : AppCompatActivity() {
                 ScreenModeHandler.switchTheme(true)
                 //нужно сохранить состояние
                 sharedPrefs.edit()
-                    .putString(DARK_THEME, "true")
+                    .putBoolean(DARK_THEME, true)
             } else {
                 //пользователь включил светлую тему
                 ScreenModeHandler.switchTheme(false)
                 //нужно сохранить состояние
                 sharedPrefs.edit()
-                    .putString(DARK_THEME, "false")
+                    .putBoolean(DARK_THEME, false)
             }
                 .apply()
         }
-
-        //themeSwitcher.setOnCheckedChangeListener { switcher, checked -> }
 
         val share = findViewById<TextView>(R.id.shareApp)
         val getSupport = findViewById<TextView>(R.id.messageToSupport)
