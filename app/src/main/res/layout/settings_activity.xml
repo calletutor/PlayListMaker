@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/search_dual_color_background"
     android:orientation="vertical"
-    tools:context=".SettingsActivity">
+    tools:context=".presentation.SettingsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
