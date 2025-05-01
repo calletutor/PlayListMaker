@@ -9,12 +9,15 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextAppearance="@style/ToolbarTitleTextStyle" />
+        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
+        android:layout_marginTop="40dp"
+        />
 
     <!--android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"-->
@@ -24,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_to_the_edge"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="@dimen/margin_to_the_edge"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/trackName"
