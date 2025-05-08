@@ -5,89 +5,133 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.search.data.SearchScreenState
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
-import com.example.playlistmaker.player.domain.Track
+import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.search.domain.TracksResult
 
 class SearchViewModel(
-
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
-
 ) : ViewModel() {
 
-
-    private val _hasHistory = MutableLiveData(false)
-    val hasHistory: LiveData<Boolean> = _hasHistory
+    private val _uiState = MutableLiveData(SearchScreenState())
+    val uiState: LiveData<SearchScreenState> = _uiState
 
     private var currentQuery: String? = null
-
-    private val _tracks = MutableLiveData<List<Track>>(emptyList())
-    val tracks: LiveData<List<Track>> = _tracks
-
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> = _loading
-
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
-
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
 
+    /**
+     * Инициирует отложенный поиск по запросу
+     */
     fun searchDebounce(query: String) {
+
+        if (query.isBlank()) return
+
         currentQuery = query
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
         searchRunnable = Runnable { search(query) }
         searchHandler.postDelayed(searchRunnable!!, 2000L)
     }
 
+    /**
+     * Выполняет поиск
+     */
     private fun search(query: String) {
+        _uiState.postValue(_uiState.value?.copy(isLoading = true, errorMessage = null))
 
-        _loading.postValue(true)
         tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
             override fun consume(result: TracksResult) {
-                _loading.postValue(false)
                 when {
                     result.isSuccess && result.tracks.isNotEmpty() -> {
-                        _tracks.postValue(result.tracks)
-                        _error.postValue(null)
+                        _uiState.postValue(
+                            _uiState.value?.copy(
+                                tracks = result.tracks,
+                                isLoading = false,
+                                errorMessage = null
+                            )
+                        )
                     }
+
                     result.isSuccess -> {
-                        _tracks.postValue(emptyList())
-                        _error.postValue("Ничего не найдено.")
+                        _uiState.postValue(
+                            _uiState.value?.copy(
+                                tracks = emptyList(),
+                                isLoading = false,
+                                errorMessage = "Ничего не найдено."
+                            )
+                        )
                     }
+
                     result.isNetworkError -> {
-                        _tracks.postValue(emptyList())
-                        _error.postValue("Проблема с сетью.")
+                        _uiState.postValue(
+                            _uiState.value?.copy(
+                                tracks = emptyList(),
+                                isLoading = false,
+                                errorMessage = "Проблема с сетью."
+                            )
+                        )
+                    }
+
+                    else -> {
+                        _uiState.postValue(
+                            _uiState.value?.copy(
+                                tracks = emptyList(),
+                                isLoading = false,
+                                errorMessage = "Неизвестная ошибка."
+                            )
+                        )
                     }
                 }
             }
         })
     }
 
+    /**
+     * Загружает историю поиска
+     */
     fun loadSearchHistory() {
-        searchHistoryInteractor.getSavedHistory(object : SearchHistoryInteractor.SearchHistoryConsumer {
+        searchHistoryInteractor.getSavedHistory(object :
+            SearchHistoryInteractor.SearchHistoryConsumer {
             override fun consume(trackList: List<Track>) {
-                _tracks.postValue(trackList)
+                _uiState.postValue(
+                    _uiState.value?.copy(
+                        tracks = trackList,
+                        hasHistory = trackList.isNotEmpty(),
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                )
             }
         })
     }
 
-    fun clearHistory() {
-        searchHistoryInteractor.clearTrackListOfHistory()
-        _tracks.postValue(emptyList())
-    }
-
+    /**
+     * Сохраняет трек в историю
+     */
     fun saveTrackToHistory(track: Track) {
         searchHistoryInteractor.addTrackToHistory(track)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        searchHandler.removeCallbacksAndMessages(null)
+    /**
+     * Очищает историю поиска
+     */
+    fun clearHistory() {
+        searchHistoryInteractor.clearTrackListOfHistory()
+        _uiState.postValue(
+            _uiState.value?.copy(
+                tracks = emptyList(),
+                hasHistory = false,
+                errorMessage = null
+            )
+        )
     }
 
+    /**
+     * Повторяет последний запрос
+     */
     fun retrySearch() {
         val query = currentQuery
         if (!query.isNullOrEmpty()) {
@@ -95,27 +139,28 @@ class SearchViewModel(
         }
     }
 
-    fun onClearButtonClicked() {
-        _tracks.value = emptyList()
-        _error.value = null
-    }
-
+    /**
+     * Отменяет отложенный поиск
+     */
     fun cancelSearchDebounce() {
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
         currentQuery = null
     }
 
-    fun loadHasHistory() {
-        searchHistoryInteractor.getSavedHistory(object : SearchHistoryInteractor.SearchHistoryConsumer {
-            override fun consume(trackList: List<Track>) {
-                _hasHistory.postValue(trackList.isNotEmpty())
-            }
-        })
-    }
-
+    /**
+     * Очищает текущие треки (например, при очистке поля ввода)
+     */
     fun clearTracks() {
-        _tracks.value = emptyList()
+        _uiState.postValue(
+            _uiState.value?.copy(
+                tracks = emptyList(),
+                errorMessage = null
+            )
+        )
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        searchHandler.removeCallbacksAndMessages(null)
+    }
 }

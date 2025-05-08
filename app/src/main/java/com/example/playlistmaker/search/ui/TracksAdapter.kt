@@ -3,16 +3,18 @@ package com.example.playlistmaker.search.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
-import com.example.playlistmaker.player.domain.Track
+import com.example.playlistmaker.databinding.TracksViewBinding
+import com.example.playlistmaker.search.domain.Track
 
 class TracksAdapter(private val clickListener: TrackClickListener) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var tracks: MutableList<Track> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.tracks_view, parent, false)
-        return TrackViewHolder(view)
+
+        val binding = TracksViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TrackViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {

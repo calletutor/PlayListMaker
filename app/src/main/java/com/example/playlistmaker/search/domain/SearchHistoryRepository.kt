@@ -1,6 +1,4 @@
-package com.example.playlistmaker.search.data
-
-import com.example.playlistmaker.player.domain.Track
+package com.example.playlistmaker.search.domain
 
 
 interface SearchHistoryRepository {

@@ -1,24 +1,30 @@
-package com.example.playlistmaker.creator
+package com.example.playlistmaker.creator.domain
 
 import android.app.Activity
 import com.example.playlistmaker.search.data.TracksRepository
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.player.ui.PlayerViewModelFactory
+import com.example.playlistmaker.player.data.PlayerWrapper
+import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.player.domain.PlayerInteractorImpl
+import com.example.playlistmaker.player.data.PlayerRepository
 import com.example.playlistmaker.main.ui.TRACK_HISTORY
 import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
 import com.example.playlistmaker.search.data.TracksRepositoryImpl
-import com.example.playlistmaker.player.domain.TrackMapper
-import com.example.playlistmaker.search.domain.RetrofitNetworkClient
+import com.example.playlistmaker.search.data.TrackMapper
+import com.example.playlistmaker.search.data.RetrofitNetworkClient
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
-import com.example.playlistmaker.search.data.SearchHistoryRepository
+import com.example.playlistmaker.search.domain.SearchHistoryRepository
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.example.playlistmaker.settings.domain.SettingsRepository
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.SearchHistoryInteractorImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractorImpl
-import com.example.playlistmaker.creator.domain.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.TracksInteractorImpl
 import com.example.playlistmaker.sharing.data.AppLinkProviderImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
 import com.example.playlistmaker.sharing.domain.api.AppLinkProvider
@@ -26,6 +32,8 @@ import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
+import com.example.playlistmaker.player.data.PlayerRepositoryImpl
+
 
 object Creator {
 
@@ -82,13 +90,21 @@ object Creator {
         return SharingInteractorImpl(externalNavigator, appLinkProvider)
     }
 
-    fun provideExternalNavigator(activity: Activity): ExternalNavigator {
-        return ExternalNavigatorImpl(activity)
+    private val mediaPlayerWrapper: PlayerWrapper by lazy {
+        PlayerWrapper()
     }
 
-    fun provideAppLinkProvider(): AppLinkProvider {
-        require(::application.isInitialized) { "Application not initialized!" }
-        return appLinkProvider
+    private val playerRepository: PlayerRepository by lazy {
+        PlayerRepositoryImpl(mediaPlayerWrapper)
+    }
+
+    fun providePlayerInteractor(): PlayerInteractor {
+        return PlayerInteractorImpl(playerRepository)
+    }
+
+    fun providePlayerViewModelFactory(): ViewModelProvider.Factory {
+        val interactor: PlayerInteractor = providePlayerInteractor()
+        return PlayerViewModelFactory(interactor)
     }
 
 }

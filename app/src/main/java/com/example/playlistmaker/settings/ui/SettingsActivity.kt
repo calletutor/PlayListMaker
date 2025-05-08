@@ -1,32 +1,18 @@
 package com.example.playlistmaker.settings.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.creator.domain.Creator
+import com.example.playlistmaker.databinding.SettingsActivityBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: SettingsActivityBinding
 
-    private val externalNavigator by lazy { Creator.provideExternalNavigator(this) }
-    private val sharingInteractor by lazy {
-        SharingInteractorImpl(
-            externalNavigator,
-            Creator.provideAppLinkProvider()
-        )
-    }
-
-    private lateinit var themeSwitcher: SwitchMaterial
     private val viewModel: SettingsViewModel by viewModels {
         SettingsViewModelFactory(
             Creator.provideSettingsInteractor(),
@@ -36,59 +22,72 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = SettingsActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
-        setContentView(R.layout.settings_activity)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
+        // Обработка insets для edge-to-edge
+        ViewCompat.setOnApplyWindowInsetsListener(binding.settings) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
         setupToolbar()
-        setupThemeSwitcher()
-        setupOtherButtons()
+        setupListeners()
         observeViewModel()
     }
 
     private fun setupToolbar() {
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { finish() }
-    }
-
-    private fun setupThemeSwitcher() {
-        themeSwitcher = findViewById(R.id.themeSwitcher)
-
-        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onDarkThemeSwitched(isChecked)
+        binding.toolbar.setNavigationOnClickListener{
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 
-    private fun setupOtherButtons() {
-        findViewById<TextView>(R.id.shareApp).setOnClickListener {
+    private fun setupListeners() {
+        // Обработчик для темы
+
+        binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            if (binding.themeSwitcher.isPressed) { // Проверяем, что изменение инициировано пользователем
+                viewModel.onDarkThemeSwitched(isChecked)
+            }
+        }
+
+        // Обработчики для других кнопок
+        binding.shareApp.setOnClickListener {
             viewModel.onShareAppClicked()
         }
 
-        findViewById<TextView>(R.id.messageToSupport).setOnClickListener {
+        binding.messageToSupport.setOnClickListener {
             viewModel.onSupportClicked()
         }
 
-        findViewById<TextView>(R.id.agreement).setOnClickListener {
+        binding.agreement.setOnClickListener {
             viewModel.onAgreementClicked()
         }
     }
 
     private fun observeViewModel() {
+        viewModel.uiState.observe(this) { state ->
+            // Обновление переключателя темы
+            updateThemeSwitch(state.isDarkThemeEnabled)
+        }
+    }
 
-        viewModel.darkThemeEnabled.observe(this) { isEnabled ->
-            // Сначала отключаем слушатель
-            themeSwitcher.setOnCheckedChangeListener(null)
-            // Обновляем состояние Switch
-            themeSwitcher.isChecked = isEnabled
-            // Снова включаем слушатель
-            themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.onDarkThemeSwitched(isChecked)
+    private fun updateThemeSwitch(isChecked: Boolean) {
+        // Временно отключаем слушатель, чтобы избежать рекурсии
+        binding.themeSwitcher.setOnCheckedChangeListener(null)
+        binding.themeSwitcher.isChecked = isChecked
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            if (binding.themeSwitcher.isPressed) {
+                viewModel.onDarkThemeSwitched(checked)
             }
         }
+    }
+
+    override fun onDestroy() {
+        // Очищаем слушатели
+        binding.themeSwitcher.setOnCheckedChangeListener(null)
+        super.onDestroy()
     }
 }

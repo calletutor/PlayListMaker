@@ -1,7 +1,6 @@
-package com.example.playlistmaker.search.domain
+package com.example.playlistmaker.search.data
 
-import com.example.playlistmaker.search.data.TracksSearchRequest
-import com.example.playlistmaker.search.data.ItunesApi
+import com.example.playlistmaker.search.domain.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

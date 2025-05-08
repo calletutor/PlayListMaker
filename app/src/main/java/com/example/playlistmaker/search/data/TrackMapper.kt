@@ -1,6 +1,6 @@
-package com.example.playlistmaker.player.domain
+package com.example.playlistmaker.search.data
 
-import com.example.playlistmaker.search.data.TracksSearchResponse
+import com.example.playlistmaker.search.domain.Track
 
 class TrackMapper {
     fun map(response: TracksSearchResponse): List<Track> {

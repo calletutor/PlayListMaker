@@ -1,8 +1,6 @@
 package com.example.playlistmaker.search.data
 
 import com.example.playlistmaker.search.domain.TracksResult
-import com.example.playlistmaker.search.domain.NetworkClient
-import com.example.playlistmaker.player.domain.TrackMapper
 import java.io.IOException
 
 class TracksRepositoryImpl(

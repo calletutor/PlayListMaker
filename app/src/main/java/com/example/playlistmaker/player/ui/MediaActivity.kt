@@ -5,14 +5,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.MediaActivityBinding
 
 class MediaActivity : AppCompatActivity() {
+
+    private lateinit var binding: MediaActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = MediaActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         enableEdgeToEdge()
-        setContentView(R.layout.media_activity)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.media)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.media) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
