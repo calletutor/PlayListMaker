@@ -7,11 +7,14 @@
     android:layout_height="match_parent"
     android:background="@color/search_dual_color_background"
     android:orientation="vertical"
-    tools:context=".presentation.SearchActivity">
+    tools:context=".search.ui.SearchActivity">
 
+    <!--пришлось добавить отступ сверху, тк сползло после рефакторинга почему-то-->
+    <!--android:layout_marginTop="20dp"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="0dp"
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search"
@@ -145,6 +148,7 @@
             android:paddingVertical="20dp"
             android:text="TextView"
             android:textSize="@dimen/text_size_20"
+            android:visibility="gone"
         />
 
         <Button
@@ -155,6 +159,7 @@
             android:layout_gravity="center"
             android:text="@string/refresh"
             android:textSize="@dimen/text_size_16"
+            android:visibility="gone"
         />
 
     </LinearLayout>

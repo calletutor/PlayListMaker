@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PlayListMarker</string>
+    <string name="app_name">PlayListMaker</string>
     <string name="search">Поиск</string>
     <string name="media">Медиатека</string>
     <string name="settings">Настройки</string>
@@ -30,5 +30,10 @@
     <string name="year_hint">year</string>
     <string name="genre_hint">genre</string>
     <string name="country_hint">country</string>
+
+    <string name="nothing_found">Ничего не найдено.</string>
+
+
+
 
 </resources>
