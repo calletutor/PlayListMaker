@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 
-class SettingsViewModelFactory(
+class SettingsViewModelFactory_toDelete(
     private val settingsInteractor: SettingsInteractor,
     private val sharingInteractor: SharingInteractor // Добавляем параметр
 ) : ViewModelProvider.Factory {

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 
-class SearchViewModelFactory(
+class SearchViewModelFactory_toDelete(
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModelProvider.Factory {

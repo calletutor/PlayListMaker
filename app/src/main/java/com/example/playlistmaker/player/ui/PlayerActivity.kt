@@ -9,29 +9,25 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.domain.Creator
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.main.ui.CURRENT_TRACK_DATA
 import com.example.playlistmaker.search.domain.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.playlistmaker.dpToPx
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
+    private val viewModel: PlayerViewModel by viewModel()
+
     private lateinit var binding: PlayerActivityBinding
-    private lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
-        viewModel = ViewModelProvider(
-            this,
-            Creator.providePlayerViewModelFactory()
-        )[PlayerViewModel::class.java]
 
         val track: Track? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(CURRENT_TRACK_DATA, Track::class.java)
