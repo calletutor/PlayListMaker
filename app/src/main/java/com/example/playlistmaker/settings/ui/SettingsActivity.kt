@@ -6,19 +6,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.creator.domain.Creator
 import com.example.playlistmaker.databinding.SettingsActivityBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var binding: SettingsActivityBinding
+    private val viewModel: SettingsViewModel by viewModel()
 
-    private val viewModel: SettingsViewModel by viewModels {
-        SettingsViewModelFactory(
-            Creator.provideSettingsInteractor(),
-            Creator.provideSharingInteractor()
-        )
-    }
+    private lateinit var binding: SettingsActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
