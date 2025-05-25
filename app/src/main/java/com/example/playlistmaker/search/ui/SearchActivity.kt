@@ -15,12 +15,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.main.ui.CURRENT_TRACK_DATA
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.domain.Creator
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
+
+    private val viewModel: SearchViewModel by viewModel()
 
     private lateinit var binding: SearchActivityBinding
 
@@ -29,7 +31,6 @@ class SearchActivity : AppCompatActivity() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    private lateinit var viewModel: SearchViewModel
     private lateinit var tracksAdapter: TracksAdapter
 
     private var isClickAllowed = true
@@ -40,14 +41,6 @@ class SearchActivity : AppCompatActivity() {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModelFactory(
-                Creator.provideTracksInteractor(),
-                Creator.provideSearchHistoryInteractor()
-            )
-        ).get(SearchViewModel::class.java)
 
         initRecyclerView()
         initListeners()
