@@ -9,8 +9,6 @@
     android:orientation="vertical"
     tools:context=".search.ui.SearchActivity">
 
-    <!--пришлось добавить отступ сверху, тк сползло после рефакторинга почему-то-->
-    <!--android:layout_marginTop="20dp"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
@@ -64,17 +62,12 @@
         />
 
     </FrameLayout>
-    <!--
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--android:visibility="gone"-->
         <TextView
             android:id="@+id/searchHistoryTitle"
             android:layout_width="match_parent"
@@ -87,7 +80,6 @@
             android:visibility="gone"
         />
 
-        <!--android:layout_weight="1"-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -102,7 +94,6 @@
             app:layout_constraintTop_toTopOf="parent"
         />
 
-        <!--android:visibility="gone"-->
         <Button
             android:id="@+id/clearHistory"
             style="@style/refreshButton"
@@ -124,7 +115,6 @@
         android:orientation="vertical"
         android:paddingVertical="120dp">
 
-        <!--android:visibility="gone"-->
         <ProgressBar android:id="@+id/progressBar"
             android:layout_width="44dp"
             android:layout_height="44dp"
@@ -163,5 +153,4 @@
         />
 
     </LinearLayout>
-    <!--</FrameLayout>-->
 </LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><!--android:background="@color/dual_color"-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/dual_color4"
+    >
+    <Button
+        android:id="@+id/refreshButton"
+        style="@style/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="24dp"
+        android:text="@string/new_playlist"
+        android:textSize="@dimen/text_size_14" />
+
+    <ImageView
+        android:id="@+id/no_results_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_not_found" />
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="@string/no_playlist_created"
+        android:textColor="@color/dual_color"
+        android:textSize="@dimen/text_size_19" />
+
+</LinearLayout>

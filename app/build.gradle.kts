@@ -60,4 +60,8 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     testImplementation(libs.koin.test)
+
+    implementation (libs.material.v160)
+    implementation(libs.material.v1110)
+
 }

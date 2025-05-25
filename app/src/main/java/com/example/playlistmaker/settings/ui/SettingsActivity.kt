@@ -35,7 +35,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener{
-            onBackPressedDispatcher.onBackPressed()
+            finish()
+//            onBackPressedDispatcher.onBackPressed()
         }
     }
 
