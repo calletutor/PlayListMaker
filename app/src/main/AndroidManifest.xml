@@ -25,7 +25,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".player.ui.MediaActivity"
+            android:name=".media.ui.MediaActivity"
             android:exported="false" />
 
         <activity

@@ -1,5 +1,7 @@
 package com.example.playlistmaker.settings.ui
 
+import android.content.Context
+import android.content.res.Configuration
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +17,23 @@ class SettingsViewModel(
 
     init {
         loadDarkThemeState()
+    }
+
+    fun loadInitialThemeState(context: Context) {
+        settingsInteractor.wasThemeSaved(object : SettingsInteractor.SavedThemeHistoryConsumer {
+            override fun consume(isThemeHistory: Boolean) {
+                if (isThemeHistory) {
+                    loadDarkThemeState()
+                } else {
+                    val nightModeFlags = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                    val isDark = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+                    _uiState.postValue(
+                        _uiState.value?.copy(isDarkThemeEnabled = isDark)
+                    )
+                }
+            }
+        })
     }
 
     private fun loadDarkThemeState() {
@@ -40,7 +59,6 @@ class SettingsViewModel(
             _uiState.value?.copy(currentEvent = SettingsEvent.ShareApp)
         )
         sharingInteractor.shareApp()
-        // Сбрасываем событие после обработки
         _uiState.postValue(
             _uiState.value?.copy(currentEvent = null)
         )

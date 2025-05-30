@@ -7,7 +7,7 @@ import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 
 class SettingsViewModelFactory_toDelete(
     private val settingsInteractor: SettingsInteractor,
-    private val sharingInteractor: SharingInteractor // Добавляем параметр
+    private val sharingInteractor: SharingInteractor
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {

@@ -8,6 +8,10 @@ class SettingsRepositoryImpl(
     private val sharedPreferences: SharedPreferences
 ) : SettingsRepository {
 
+    override fun isThereThemeHistorySaved(): Boolean {
+        return sharedPreferences.contains(DARK_THEME)
+    }
+
     override fun isDarkThemeEnabled(): Boolean {
         return sharedPreferences.getBoolean(DARK_THEME, false)
     }

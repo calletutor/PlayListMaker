@@ -46,7 +46,6 @@ class SearchActivity : AppCompatActivity() {
         initListeners()
         observeViewModel()
 
-        // Восстановление состояния
         savedInstanceState?.getString(EDIT_TEXT)?.let {
             binding.searchInputEditText.setText(it)
         }
@@ -73,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initListeners() {
         binding.searchInputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.searchInputEditText.text.isEmpty()) {
-                viewModel.loadSearchHistory() // Загружаем историю
+                viewModel.loadSearchHistory()
             } else {
                 binding.clearHistory.isVisible = false
             }
@@ -89,12 +88,9 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchFailedImage.isVisible = false
                 binding.errorMessage.isVisible = false
                 if (s.isNullOrEmpty()) {
-                    //поле поиска пустое
                     viewModel.loadSearchHistory()
                     binding.clearButton.isVisible = false
                 } else {
-                    //поле поиска не пустое
-                    //делаем поиск треков
                     viewModel.searchDebounce(s.toString())
                     binding.clearButton.isVisible = true
                     binding.clearHistory.isVisible = false
