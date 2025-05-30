@@ -36,10 +36,8 @@ class MediaActivity : AppCompatActivity() {
             finish()
         }
 
-        // Настраиваем ViewPager с адаптером
         viewPager.adapter = ViewPagerAdapter(this)
 
-        // Связываем TabLayout с ViewPager
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val customTab = LayoutInflater.from(this).inflate(R.layout.custom_tab, null) as TextView
             customTab.text = when (position) {

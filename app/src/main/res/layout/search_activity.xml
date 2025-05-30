@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--android:background="@color/search_dual_color_background"-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/search_dual_color_background"
+    android:background="@color/dual_color4"
     android:orientation="vertical"
     tools:context=".search.ui.SearchActivity">
 
+    <!--app:titleTextColor="@color/search_screen_title_color"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
@@ -17,7 +19,8 @@
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/search_screen_title_color" />
+        app:titleTextColor="@color/dual_color"
+    />
 
     <FrameLayout
         android:layout_width="match_parent"

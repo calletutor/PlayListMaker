@@ -21,7 +21,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        // Обработка insets для edge-to-edge
         ViewCompat.setOnApplyWindowInsetsListener(binding.settings) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -31,25 +30,17 @@ class SettingsActivity : AppCompatActivity() {
         setupToolbar()
         setupListeners()
         observeViewModel()
+
     }
 
     private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener{
+        binding.toolbar.setNavigationOnClickListener {
             finish()
-//            onBackPressedDispatcher.onBackPressed()
         }
     }
 
     private fun setupListeners() {
-        // Обработчик для темы
 
-        binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            if (binding.themeSwitcher.isPressed) { // Проверяем, что изменение инициировано пользователем
-                viewModel.onDarkThemeSwitched(isChecked)
-            }
-        }
-
-        // Обработчики для других кнопок
         binding.shareApp.setOnClickListener {
             viewModel.onShareAppClicked()
         }
@@ -65,13 +56,11 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { state ->
-            // Обновление переключателя темы
             updateThemeSwitch(state.isDarkThemeEnabled)
         }
     }
 
     private fun updateThemeSwitch(isChecked: Boolean) {
-        // Временно отключаем слушатель, чтобы избежать рекурсии
         binding.themeSwitcher.setOnCheckedChangeListener(null)
         binding.themeSwitcher.isChecked = isChecked
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
@@ -81,8 +70,12 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadInitialThemeState(this)
+    }
+
     override fun onDestroy() {
-        // Очищаем слушатели
         binding.themeSwitcher.setOnCheckedChangeListener(null)
         super.onDestroy()
     }

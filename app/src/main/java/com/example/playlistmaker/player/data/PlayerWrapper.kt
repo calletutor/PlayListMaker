@@ -9,7 +9,7 @@ class PlayerWrapper {
     private var onCompletionCallback: (() -> Unit)? = null
 
     fun prepare(url: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
-        release() // освобождаем если был старый
+        release()
 
         mediaPlayer = MediaPlayer().apply {
             setDataSource(url)

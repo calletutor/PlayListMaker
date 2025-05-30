@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--app:titleTextColor="@color/search_screen_title_color"-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/media"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:background="@color/dual_color4"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,22 +16,19 @@
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/media_library"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/search_screen_title_color"
-        />
+        app:titleTextColor="@color/dual_color"
+    />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/dual_color4"
-        app:tabIndicatorColor="@color/dual_color"
-        />
+        app:tabIndicatorColor="@color/dual_color" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-
-        />
+        android:layout_weight="1" />
 </LinearLayout>
