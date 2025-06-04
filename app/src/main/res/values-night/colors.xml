@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<color name="search_screen_title_color">@color/white</color>-->
-<!--<color name="search_dual_color_background">@color/black</color>-->
 <resources>
     <color name="background">@color/black</color>
     <color name="dual_color">@color/white</color>

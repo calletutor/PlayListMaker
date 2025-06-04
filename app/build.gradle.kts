@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.navigation.safeargs)
     id("kotlin-parcelize")
+
 }
 
 android {
@@ -38,6 +40,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -63,5 +66,13 @@ dependencies {
 
     implementation (libs.material.v160)
     implementation(libs.material.v1110)
+
+    implementation (libs.androidx.navigation.fragment.ktx)
+    implementation (libs.androidx.navigation.ui.ktx)
+    implementation (libs.material)
+
+    implementation (libs.androidx.navigation.fragment.ktx.v277)
+    implementation (libs.androidx.navigation.ui.ktx.v277)
+    implementation (libs.androidx.fragment.ktx)
 
 }

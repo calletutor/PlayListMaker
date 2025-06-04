@@ -20,5 +20,6 @@
         android:paddingVertical="20dp"
         android:text="@string/media_library_is_empty"
         android:textColor="@color/dual_color"
-        android:textSize="@dimen/text_size_19" />
+        android:textSize="@dimen/text_size_19"
+        />
 </LinearLayout>
