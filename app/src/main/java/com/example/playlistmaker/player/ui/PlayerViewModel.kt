@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+
 
     companion object {
         private const val STATE_DEFAULT = 0

@@ -11,6 +11,9 @@ import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.search.domain.TracksResult
 
+
+
+
 class SearchViewModel(
     private val tracksInteractor: TracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
@@ -23,9 +26,6 @@ class SearchViewModel(
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
 
-    /**
-     * Инициирует отложенный поиск по запросу
-     */
     fun searchDebounce(query: String) {
 
         if (query.isBlank()) return
@@ -36,9 +36,6 @@ class SearchViewModel(
         searchHandler.postDelayed(searchRunnable!!, 2000L)
     }
 
-    /**
-     * Выполняет поиск
-     */
     private fun search(query: String) {
         _uiState.postValue(_uiState.value?.copy(isLoading = true, errorMessage = null))
 
@@ -89,9 +86,6 @@ class SearchViewModel(
         })
     }
 
-    /**
-     * Загружает историю поиска
-     */
     fun loadSearchHistory() {
         searchHistoryInteractor.getSavedHistory(object :
             SearchHistoryInteractor.SearchHistoryConsumer {
@@ -108,16 +102,10 @@ class SearchViewModel(
         })
     }
 
-    /**
-     * Сохраняет трек в историю
-     */
     fun saveTrackToHistory(track: Track) {
         searchHistoryInteractor.addTrackToHistory(track)
     }
 
-    /**
-     * Очищает историю поиска
-     */
     fun clearHistory() {
         searchHistoryInteractor.clearTrackListOfHistory()
         _uiState.postValue(
@@ -129,9 +117,6 @@ class SearchViewModel(
         )
     }
 
-    /**
-     * Повторяет последний запрос
-     */
     fun retrySearch() {
         val query = currentQuery
         if (!query.isNullOrEmpty()) {
@@ -139,17 +124,11 @@ class SearchViewModel(
         }
     }
 
-    /**
-     * Отменяет отложенный поиск
-     */
     fun cancelSearchDebounce() {
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
         currentQuery = null
     }
 
-    /**
-     * Очищает текущие треки (например, при очистке поля ввода)
-     */
     fun clearTracks() {
         _uiState.postValue(
             _uiState.value?.copy(

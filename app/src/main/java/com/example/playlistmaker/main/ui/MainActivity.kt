@@ -1,17 +1,20 @@
 package com.example.playlistmaker.main.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.MainActivityBinding
-import com.example.playlistmaker.media.ui.MediaActivity
-import com.example.playlistmaker.search.ui.SearchActivity
-import com.example.playlistmaker.settings.ui.SettingsActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var binding: MainActivityBinding
 
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        bottomNav = findViewById(R.id.bottomNavigationView)
 
         enableEdgeToEdge()
 
@@ -29,16 +33,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        binding.buttonSearch.setOnClickListener{
-                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
-        }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        binding.buttonMedia.setOnClickListener {
-            startActivity(Intent(this, MediaActivity::class.java))
-        }
+        val navController = navHostFragment.navController
 
-        binding.buttonSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
+        findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.setupWithNavController(
+            navController
+        )
+    }
+
+    fun setBottomNavVisible(isVisible: Boolean) {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav.isVisible = isVisible
     }
 }

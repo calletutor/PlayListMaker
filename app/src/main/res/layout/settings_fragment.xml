@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--android:background="@color/search_dual_color_background"-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,16 +7,18 @@
     android:layout_height="match_parent"
     android:background="@color/dual_color4"
     android:orientation="vertical"
-    tools:context=".settings.ui.SettingsActivity">
+    tools:context=".settings.ui.SettingsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/toolbarStyle"
-        app:navigationIcon="@drawable/arrow_back"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/settings"
-        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/dual_color" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_medium"
+        android:paddingStart="16dp"
+        android:paddingTop="0dp"
+        android:text="@string/settings"
+        android:textSize="22sp">
+
+    </TextView>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/themeSwitcher"
