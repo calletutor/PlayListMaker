@@ -32,9 +32,9 @@ class App : Application() {
             )
         }
 
-        // Получаем SettingsInteractor через Koin
         val settingsInteractor= getKoin().get<SettingsInteractor>()
         val screenModeHandler = ScreenModeHandler(settingsInteractor)
+
         screenModeHandler.setCurrentScreenMode()
 
     }

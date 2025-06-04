@@ -6,6 +6,10 @@ class SettingsInteractorImpl(
     private val settingsRepository: SettingsRepository
 ) : SettingsInteractor {
 
+    override fun wasThemeSaved(consumer: SettingsInteractor.SavedThemeHistoryConsumer) {
+        consumer.consume(settingsRepository.isThereThemeHistorySaved())
+    }
+
     override fun darkThemeIsEnabled(consumer: SettingsInteractor.DarkThemeConsumer) {
         consumer.consume(settingsRepository.isDarkThemeEnabled())
     }

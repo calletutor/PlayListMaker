@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--android:background="@color/search_dual_color_background"-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/search_dual_color_background"
+    android:background="@color/dual_color4"
     android:orientation="vertical"
     tools:context=".search.ui.SearchActivity">
 
-    <!--пришлось добавить отступ сверху, тк сползло после рефакторинга почему-то-->
-    <!--android:layout_marginTop="20dp"-->
+    <!--app:titleTextColor="@color/search_screen_title_color"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
@@ -19,7 +19,8 @@
         app:navigationIcon="@drawable/arrow_back"
         app:title="@string/search"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/search_screen_title_color" />
+        app:titleTextColor="@color/dual_color"
+    />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -64,17 +65,12 @@
         />
 
     </FrameLayout>
-    <!--
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--android:visibility="gone"-->
         <TextView
             android:id="@+id/searchHistoryTitle"
             android:layout_width="match_parent"
@@ -87,7 +83,6 @@
             android:visibility="gone"
         />
 
-        <!--android:layout_weight="1"-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -102,7 +97,6 @@
             app:layout_constraintTop_toTopOf="parent"
         />
 
-        <!--android:visibility="gone"-->
         <Button
             android:id="@+id/clearHistory"
             style="@style/refreshButton"
@@ -124,7 +118,6 @@
         android:orientation="vertical"
         android:paddingVertical="120dp">
 
-        <!--android:visibility="gone"-->
         <ProgressBar android:id="@+id/progressBar"
             android:layout_width="44dp"
             android:layout_height="44dp"
@@ -163,5 +156,4 @@
         />
 
     </LinearLayout>
-    <!--</FrameLayout>-->
 </LinearLayout>

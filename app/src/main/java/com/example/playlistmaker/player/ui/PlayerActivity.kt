@@ -50,17 +50,14 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.uiState.observe(this) { state ->
-            // Кнопка Play/Pause
             binding.playImage.setImageResource(state.buttonResId)
-
-            // Время воспроизведения
             binding.playingTime.text = state.playTime
         }
     }
 
     private fun setupClickListeners() {
         binding.playImage.setOnClickListener {
-            viewModel.playbackControl() // кнопка play/pause
+            viewModel.playbackControl()
         }
 
         binding.toolbar.setNavigationOnClickListener {
