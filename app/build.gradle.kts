@@ -75,4 +75,8 @@ dependencies {
     implementation (libs.androidx.navigation.ui.ktx.v277)
     implementation (libs.androidx.fragment.ktx)
 
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+
 }
