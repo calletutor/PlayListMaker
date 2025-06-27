@@ -1,17 +1,19 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+
 
 class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
-
 
     companion object {
         private const val STATE_DEFAULT = 0
@@ -19,15 +21,14 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
 
-        private const val DELAY = 1000L
+        private const val DELAY = 300L
     }
 
     private val _uiState = MutableLiveData(PlayerScreenState())
     val uiState: LiveData<PlayerScreenState> = _uiState
 
     private var playerState = STATE_DEFAULT
-    private var timerHandler = Handler(Looper.getMainLooper())
-    private var timerRunnable: Runnable? = null
+    private var timerJob: Job? = null
     private var totalPlayTimeElapsed = 0
     var currentTrack: Track? = null
 
@@ -43,7 +44,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
                 onCompletion = {
                     playerState = STATE_PREPARED
                     totalPlayTimeElapsed = 0
-                    stopTimer()
+                    timerJob?.cancel()
                     _uiState.postValue(
                         _uiState.value?.copy(
                             playTime = "00:00",
@@ -66,46 +67,49 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     private fun startPlayer() {
         playerInteractor.startPlayer()
         playerState = STATE_PLAYING
-        _uiState.postValue(_uiState.value?.copy(
+        _uiState.value = _uiState.value?.copy(
             isPlaying = true,
             buttonResId = R.drawable.pause_button_light
-        ))
-        stopTimer()
+        )
+        timerJob?.cancel()
         startTimer()
     }
 
     private fun pausePlayer() {
         playerInteractor.pausePlayer()
         playerState = STATE_PAUSED
-        _uiState.postValue(_uiState.value?.copy(
+        _uiState.value = _uiState.value?.copy(
             isPlaying = false,
             buttonResId = R.drawable.play_button
-        ))
+        )
+        timerJob?.cancel()
     }
+
+
 
     private fun startTimer() {
-        if (timerRunnable != null) {
-            return
-        }
-        timerRunnable = object : Runnable {
-            override fun run() {
+        timerJob?.cancel()
+
+        timerJob = viewModelScope.launch {
+            var lastUpdateTime = System.currentTimeMillis()
+
+            while (isActive) {
                 if (playerState == STATE_PLAYING) {
-                    totalPlayTimeElapsed++
+                    val currentTime = System.currentTimeMillis()
+                    val elapsed = (currentTime - lastUpdateTime).toInt()
+
+                    totalPlayTimeElapsed += elapsed
+                    lastUpdateTime = currentTime
+
                     _uiState.postValue(
                         _uiState.value?.copy(
-                            playTime = formatTime(totalPlayTimeElapsed)
+                            playTime = formatTime(totalPlayTimeElapsed / 1000)
                         )
                     )
-                    timerHandler.postDelayed(this, DELAY)
                 }
+                delay(DELAY)
             }
         }
-        timerHandler.postDelayed(timerRunnable!!, DELAY)
-    }
-
-    private fun stopTimer() {
-        timerRunnable?.let { timerHandler.removeCallbacks(it) }
-        timerRunnable = null
     }
 
     private fun formatTime(seconds: Int): String {
@@ -115,6 +119,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        timerHandler.removeCallbacksAndMessages(null)
+        timerJob?.cancel()
     }
 }

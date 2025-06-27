@@ -5,13 +5,14 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.data.SearchScreenState
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.search.domain.TracksResult
-
-
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
@@ -39,40 +40,10 @@ class SearchViewModel(
     private fun search(query: String) {
         _uiState.postValue(_uiState.value?.copy(isLoading = true, errorMessage = null))
 
-        tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-            override fun consume(result: TracksResult) {
-                when {
-                    result.isSuccess && result.tracks.isNotEmpty() -> {
-                        _uiState.postValue(
-                            _uiState.value?.copy(
-                                tracks = result.tracks,
-                                isLoading = false,
-                                errorMessage = null
-                            )
-                        )
-                    }
-
-                    result.isSuccess -> {
-                        _uiState.postValue(
-                            _uiState.value?.copy(
-                                tracks = emptyList(),
-                                isLoading = false,
-                                errorMessage = "Ничего не найдено."
-                            )
-                        )
-                    }
-
-                    result.isNetworkError -> {
-                        _uiState.postValue(
-                            _uiState.value?.copy(
-                                tracks = emptyList(),
-                                isLoading = false,
-                                errorMessage = "Проблема с сетью."
-                            )
-                        )
-                    }
-
-                    else -> {
+        viewModelScope.launch {
+            viewModelScope.launch {
+                tracksInteractor.searchTracks(query)
+                    .catch { e ->
                         _uiState.postValue(
                             _uiState.value?.copy(
                                 tracks = emptyList(),
@@ -81,9 +52,53 @@ class SearchViewModel(
                             )
                         )
                     }
-                }
+                    .collect { result ->
+                        when {
+                            result.isSuccess && result.tracks.isNotEmpty() -> {
+                                _uiState.postValue(
+                                    _uiState.value?.copy(
+                                        tracks = result.tracks,
+                                        isLoading = false,
+                                        errorMessage = null
+                                    )
+                                )
+                            }
+
+                            result.isSuccess -> {
+                                _uiState.postValue(
+                                    _uiState.value?.copy(
+                                        tracks = emptyList(),
+                                        isLoading = false,
+                                        errorMessage = "Ничего не найдено."
+                                    )
+                                )
+                            }
+
+                            result.isNetworkError -> {
+                                _uiState.postValue(
+                                    _uiState.value?.copy(
+                                        tracks = emptyList(),
+                                        isLoading = false,
+                                        errorMessage = "Проблема с сетью."
+                                    )
+                                )
+                            }
+
+                            else -> {
+                                _uiState.postValue(
+                                    _uiState.value?.copy(
+                                        tracks = emptyList(),
+                                        isLoading = false,
+                                        errorMessage = "Неизвестная ошибка."
+                                    )
+                                )
+                            }
+                        }
+                    }
             }
-        })
+        }
+
+
     }
 
     fun loadSearchHistory() {
