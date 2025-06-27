@@ -1,19 +1,19 @@
 package com.example.playlistmaker.media.ui
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 
-class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
-
+class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> FragmentSelectedTracks.newInstance()
-            1 -> FragmentPlaylists.newInstance()
+            0 -> FragmentSelectedTracks()
+            1 -> FragmentPlaylists()
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
 }
+

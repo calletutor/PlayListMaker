@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--app:titleTextColor="@color/search_screen_title_color"-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/media"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dual_color4"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="0dp"
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/toolbarStyle"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        app:navigationIcon="@drawable/arrow_back"
-        app:title="@string/media_library"
-        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/dual_color"
-    />
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_medium"
+        android:paddingStart="16dp"
+        android:paddingTop="0dp"
+        android:text="@string/media"
+        android:textSize="22sp">
+
+    </TextView>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
