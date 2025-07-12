@@ -13,7 +13,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val defaultPlayTime: String
+) : ViewModel() {
 
     companion object {
         private const val STATE_DEFAULT = 0
@@ -24,12 +27,14 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
         private const val DELAY = 300L
     }
 
-    private val _uiState = MutableLiveData(PlayerScreenState())
+    private val _uiState = MutableLiveData(PlayerScreenState(
+        playTime = defaultPlayTime
+    ))
+
     val uiState: LiveData<PlayerScreenState> = _uiState
 
     private var playerState = STATE_DEFAULT
     private var timerJob: Job? = null
-    private var totalPlayTimeElapsed = 0
     var currentTrack: Track? = null
 
     fun preparePlayer(track: Track) {
@@ -43,11 +48,10 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
                 },
                 onCompletion = {
                     playerState = STATE_PREPARED
-                    totalPlayTimeElapsed = 0
                     timerJob?.cancel()
                     _uiState.postValue(
                         _uiState.value?.copy(
-                            playTime = "00:00",
+                            playTime = defaultPlayTime,
                             isPlaying = false,
                             buttonResId = R.drawable.play_button
                         )
@@ -86,7 +90,6 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     }
 
 
-
     private fun startTimer() {
         timerJob?.cancel()
 
@@ -95,15 +98,16 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
 
             while (isActive) {
                 if (playerState == STATE_PLAYING) {
-                    val currentTime = System.currentTimeMillis()
-                    val elapsed = (currentTime - lastUpdateTime).toInt()
 
-                    totalPlayTimeElapsed += elapsed
-                    lastUpdateTime = currentTime
+                    val currentPosition = playerInteractor.getCurrentPosition()
+
+                    val currentTime = System.currentTimeMillis()
 
                     _uiState.postValue(
                         _uiState.value?.copy(
-                            playTime = formatTime(totalPlayTimeElapsed / 1000)
+
+                            playTime = formatTime(currentPosition / 1000)
+
                         )
                     )
                 }

@@ -6,4 +6,9 @@ interface PlayerInteractor {
     fun pausePlayer()
     fun isPlaying(): Boolean
     fun release()
+
+    fun getCurrentPosition(): Int
+
+
+
 }

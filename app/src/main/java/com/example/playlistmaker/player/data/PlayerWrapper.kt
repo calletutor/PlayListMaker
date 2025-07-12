@@ -43,4 +43,10 @@ class PlayerWrapper {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
+
+
+    fun getCurrentPosition(): Int {
+        return mediaPlayer?.currentPosition ?: 0
+    }
 }

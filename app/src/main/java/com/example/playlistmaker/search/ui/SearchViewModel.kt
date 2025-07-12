@@ -10,7 +10,6 @@ import com.example.playlistmaker.search.data.SearchScreenState
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.TracksInteractor
 import com.example.playlistmaker.search.domain.Track
-import com.example.playlistmaker.search.domain.TracksResult
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
@@ -23,7 +22,7 @@ class SearchViewModel(
     private val _uiState = MutableLiveData(SearchScreenState())
     val uiState: LiveData<SearchScreenState> = _uiState
 
-    private var currentQuery: String? = null
+    var currentQuery: String? = null
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
 
@@ -38,66 +37,73 @@ class SearchViewModel(
     }
 
     private fun search(query: String) {
-        _uiState.postValue(_uiState.value?.copy(isLoading = true, errorMessage = null))
+
+        _uiState.postValue(_uiState.value?.copy(isLoading = true, error = null))
 
         viewModelScope.launch {
-            viewModelScope.launch {
-                tracksInteractor.searchTracks(query)
-                    .catch { e ->
-                        _uiState.postValue(
-                            _uiState.value?.copy(
-                                tracks = emptyList(),
-                                isLoading = false,
-                                errorMessage = "Неизвестная ошибка."
-                            )
+            tracksInteractor.searchTracks(query)
+                .catch { e ->
+                    _uiState.postValue(
+                        _uiState.value?.copy(
+                            tracks = emptyList(),
+                            isLoading = false,
+                            error = SearchError.Unknown,
+                            isShowingHistory = false
                         )
-                    }
-                    .collect { result ->
-                        when {
-                            result.isSuccess && result.tracks.isNotEmpty() -> {
-                                _uiState.postValue(
-                                    _uiState.value?.copy(
-                                        tracks = result.tracks,
-                                        isLoading = false,
-                                        errorMessage = null
-                                    )
+                    )
+                }
+                .collect { result ->
+                    when {
+                        result.isSuccess && result.tracks.isNotEmpty() -> {
+                            _uiState.postValue(
+                                _uiState.value?.copy(
+                                    tracks = result.tracks,
+                                    isLoading = false,
+                                    error = null,
+                                    isShowingHistory = false
                                 )
-                            }
+                            )
+                        }
 
-                            result.isSuccess -> {
-                                _uiState.postValue(
-                                    _uiState.value?.copy(
-                                        tracks = emptyList(),
-                                        isLoading = false,
-                                        errorMessage = "Ничего не найдено."
-                                    )
+                        result.isSuccess -> {
+                            _uiState.postValue(
+                                _uiState.value?.copy(
+                                    tracks = emptyList(),
+                                    isLoading = false,
+                                    error = SearchError.NothingFound,
+                                    isShowingHistory = false,
+                                    lastQuery = query
                                 )
-                            }
+                            )
+                        }
 
-                            result.isNetworkError -> {
-                                _uiState.postValue(
-                                    _uiState.value?.copy(
-                                        tracks = emptyList(),
-                                        isLoading = false,
-                                        errorMessage = "Проблема с сетью."
-                                    )
-                                )
-                            }
+                        result.isNetworkError -> {
+                            _uiState.postValue(
+                                _uiState.value?.copy(
+                                    tracks = emptyList(),
+                                    isLoading = false,
+                                    error = SearchError.Network,
+                                    isShowingHistory = false,
+                                    lastQuery = query
 
-                            else -> {
-                                _uiState.postValue(
-                                    _uiState.value?.copy(
-                                        tracks = emptyList(),
-                                        isLoading = false,
-                                        errorMessage = "Неизвестная ошибка."
-                                    )
                                 )
-                            }
+                            )
+                        }
+
+                        else -> {
+                            _uiState.postValue(
+                                _uiState.value?.copy(
+                                    tracks = emptyList(),
+                                    isLoading = false,
+                                    error = SearchError.Unknown,
+                                    isShowingHistory = false
+
+                                )
+                            )
                         }
                     }
-            }
+                }
         }
-
 
     }
 
@@ -105,12 +111,14 @@ class SearchViewModel(
         searchHistoryInteractor.getSavedHistory(object :
             SearchHistoryInteractor.SearchHistoryConsumer {
             override fun consume(trackList: List<Track>) {
+                val hasHistory = trackList.isNotEmpty()
                 _uiState.postValue(
                     _uiState.value?.copy(
                         tracks = trackList,
                         hasHistory = trackList.isNotEmpty(),
                         isLoading = false,
-                        errorMessage = null
+                        error = null,
+                        isShowingHistory = hasHistory
                     )
                 )
             }
@@ -127,7 +135,8 @@ class SearchViewModel(
             _uiState.value?.copy(
                 tracks = emptyList(),
                 hasHistory = false,
-                errorMessage = null
+                error = null,
+                isShowingHistory = false
             )
         )
     }
@@ -148,7 +157,8 @@ class SearchViewModel(
         _uiState.postValue(
             _uiState.value?.copy(
                 tracks = emptyList(),
-                errorMessage = null
+                error = null,
+                isLoading = false
             )
         )
     }
@@ -156,5 +166,20 @@ class SearchViewModel(
     override fun onCleared() {
         super.onCleared()
         searchHandler.removeCallbacksAndMessages(null)
+    }
+
+    fun hideHistory() {
+        _uiState.postValue(
+            _uiState.value?.copy(
+                isShowingHistory = false,
+                tracks = emptyList()
+            )
+        )
+    }
+
+    fun clearErrorMessage() {
+        _uiState.postValue(
+            _uiState.value?.copy(error = null)
+        )
     }
 }

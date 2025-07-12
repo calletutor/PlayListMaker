@@ -8,17 +8,18 @@
     android:background="@color/dual_color4"
     >
 
+    <!--android:layout_marginTop="40dp"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextAppearance="@style/ToolbarTitleTextStyle" />
+        app:titleTextAppearance="@style/ToolbarTitleTextStyle"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
