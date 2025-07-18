@@ -2,7 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.util.TypedValue
-import com.example.playlistmaker.A_NEW.data.db.TrackEntity
+import com.example.playlistmaker.favorites.data.db.TrackEntity
 import com.example.playlistmaker.search.domain.Track
 
 fun dpToPx(dp: Float, context: Context): Int {

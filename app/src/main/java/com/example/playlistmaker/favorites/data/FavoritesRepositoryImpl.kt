@@ -1,8 +1,8 @@
-package com.example.playlistmaker.A_NEW.data
+package com.example.playlistmaker.favorites.data
 
-import com.example.playlistmaker.A_NEW.data.db.TrackEntity
-import com.example.playlistmaker.A_NEW.data.db.TracksDatabase
-import com.example.playlistmaker.A_NEW.domain.FavoritesRepository
+import com.example.playlistmaker.favorites.data.db.TrackEntity
+import com.example.playlistmaker.favorites.data.db.TracksDatabase
+import com.example.playlistmaker.favorites.domain.FavoritesRepository
 import kotlinx.coroutines.flow.Flow
 
 class FavoritesRepositoryImpl(
@@ -26,4 +26,9 @@ class FavoritesRepositoryImpl(
     override fun getAllFavoriteTrackIds(): Flow<List<Int>> {
         return trackDao.getAllFavoriteTrackIds()
     }
+
+    override suspend fun isTrackFavorite(trackId: Int): Boolean {
+        return trackDao.isTrackFavorite(trackId)
+    }
+
 }

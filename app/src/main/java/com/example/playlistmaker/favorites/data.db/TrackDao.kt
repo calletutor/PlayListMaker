@@ -1,4 +1,4 @@
-package com.example.playlistmaker.A_NEW.data.db
+package com.example.playlistmaker.favorites.data.db
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -21,5 +21,8 @@ interface TrackDao {
 
     @Query("SELECT * FROM favorite_tracks ORDER BY addedAt DESC")
     fun getAllFavoriteTracksSorted(): Flow<List<TrackEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE trackId = :trackId)")
+    suspend fun isTrackFavorite(trackId: Int): Boolean
 
 }

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.DI
 
-import com.example.playlistmaker.A_NEW.data.FavoritesRepositoryImpl
-import com.example.playlistmaker.A_NEW.domain.FavoritesRepository
+import com.example.playlistmaker.favorites.data.FavoritesRepositoryImpl
+import com.example.playlistmaker.favorites.domain.FavoritesRepository
 import com.example.playlistmaker.main.ui.SETTINGS_PREFS
 import com.example.playlistmaker.main.ui.TRACK_HISTORY
 import com.example.playlistmaker.player.data.PlayerRepository

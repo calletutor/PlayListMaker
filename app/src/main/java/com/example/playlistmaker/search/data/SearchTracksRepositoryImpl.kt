@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.data
 
 import android.util.Log
-import com.example.playlistmaker.A_NEW.data.db.TracksDatabase
+import com.example.playlistmaker.favorites.data.db.TracksDatabase
 import com.example.playlistmaker.search.domain.SearchTracksResult
 import java.io.IOException
 import kotlinx.coroutines.Dispatchers

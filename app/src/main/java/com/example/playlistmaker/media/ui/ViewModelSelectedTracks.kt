@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.playlistmaker.A_NEW.domain.FavoritesRepository
+import com.example.playlistmaker.favorites.domain.FavoritesRepository
 import com.example.playlistmaker.search.domain.Track
 import com.example.playlistmaker.toTrack
 import kotlinx.coroutines.flow.map

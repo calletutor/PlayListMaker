@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.A_NEW.ui.FavoritesViewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.domain.Track
@@ -25,13 +24,11 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.flow.first
 
-
 class SearchFragment : Fragment() {
 
     private var isHistory: Boolean = false
 
     private val viewModel: SearchViewModel by viewModel()
-    private val favoritesViewModel: FavoritesViewModel by viewModel()
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
@@ -44,7 +41,6 @@ class SearchFragment : Fragment() {
     private lateinit var tracksAdapter: TracksAdapter
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -127,7 +123,6 @@ class SearchFragment : Fragment() {
                             viewModel.loadSearchHistory()
                         }
 
-
                         binding.clearButton.isVisible = false
 
                         viewModel.cancelSearchDebounce()
@@ -154,7 +149,6 @@ class SearchFragment : Fragment() {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
 
         })
 
@@ -191,7 +185,6 @@ class SearchFragment : Fragment() {
 
             binding.searchHistoryTitle.isVisible = state.isShowingHistory
             binding.clearHistory.isVisible = state.isShowingHistory
-
 
             if (state.tracks.isNotEmpty()) {
 
@@ -307,4 +300,3 @@ class SearchFragment : Fragment() {
         }
     }
 }
-

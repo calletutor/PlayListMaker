@@ -1,8 +1,8 @@
 package com.example.playlistmaker.main.ui
 
 import android.app.Application
-import com.example.playlistmaker.A_NEW.DI.dbDataModule
-import com.example.playlistmaker.A_NEW.DI.viewModelModule
+import com.example.playlistmaker.favorites.DI.dbDataModule
+import com.example.playlistmaker.favorites.DI.viewModelModule
 import com.example.playlistmaker.DI.DataModule.dataModule
 import com.example.playlistmaker.DI.InteractorModule.interactorModule
 import com.example.playlistmaker.DI.NavigationModule.navigationModule

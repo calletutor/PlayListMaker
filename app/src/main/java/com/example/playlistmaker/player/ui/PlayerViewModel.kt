@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.A_NEW.ui.FavoritesViewModel
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.R
+import com.example.playlistmaker.favorites.domain.FavoritesInteractor
 import com.example.playlistmaker.search.domain.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,14 +17,18 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val defaultPlayTime: String,
-    private val favoritesViewModel: FavoritesViewModel
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
+    enum class PlayerState {
+        DEFAULT,
+        PREPARED,
+        PLAYING,
+        PAUSED
+    }
+
+
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
 
         private const val DELAY = 300L
     }
@@ -35,29 +39,28 @@ class PlayerViewModel(
         )
     )
 
-    private val _trackFavoriteState = MutableLiveData<Boolean>()
-    val trackFavoriteState: LiveData<Boolean> get() = _trackFavoriteState
-
     val uiState: LiveData<PlayerScreenState> = _uiState
 
-    private var playerState = STATE_DEFAULT
+    private var playerState = PlayerState.DEFAULT
     private var timerJob: Job? = null
     var currentTrack: Track? = null
 
     fun preparePlayer(track: Track) {
 
-        _trackFavoriteState.value = track.isFavorite
+        _uiState.value = _uiState.value?.copy(
+            isFavorite = track.isFavorite
+        )
 
         currentTrack = track
         track.previewUrl?.let {
             playerInteractor.preparePlayer(
                 it,
                 onPrepared = {
-                    playerState = STATE_PREPARED
+                    playerState = PlayerState.PREPARED
                     _uiState.postValue(_uiState.value?.copy(isPrepared = true))
                 },
                 onCompletion = {
-                    playerState = STATE_PREPARED
+                    playerState = PlayerState.PREPARED
                     timerJob?.cancel()
                     _uiState.postValue(
                         _uiState.value?.copy(
@@ -73,14 +76,15 @@ class PlayerViewModel(
 
     fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> pausePlayer()
-            STATE_PREPARED, STATE_PAUSED -> startPlayer()
+            PlayerState.PLAYING -> pausePlayer()
+            PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
+            else->{}
         }
     }
 
     private fun startPlayer() {
         playerInteractor.startPlayer()
-        playerState = STATE_PLAYING
+        playerState = PlayerState.PLAYING
         _uiState.value = _uiState.value?.copy(
             isPlaying = true,
             buttonResId = R.drawable.pause_button_light
@@ -91,7 +95,7 @@ class PlayerViewModel(
 
     private fun pausePlayer() {
         playerInteractor.pausePlayer()
-        playerState = STATE_PAUSED
+        playerState = PlayerState.PAUSED
         _uiState.value = _uiState.value?.copy(
             isPlaying = false,
             buttonResId = R.drawable.play_button
@@ -106,7 +110,7 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
 
             while (isActive) {
-                if (playerState == STATE_PLAYING) {
+                if (playerState == PlayerState.PLAYING) {
 
                     val currentPosition = playerInteractor.getCurrentPosition()
 
@@ -134,19 +138,18 @@ class PlayerViewModel(
     }
 
     fun toggleFavorite(track: Track) {
-
-        val isCurrentlyFavorite = _trackFavoriteState.value ?: false
+        val isCurrentlyFavorite = _uiState.value?.isFavorite ?: false
         val newFavoriteState = !isCurrentlyFavorite
 
-        _trackFavoriteState.value = newFavoriteState
+        _uiState.value = _uiState.value?.copy(isFavorite = newFavoriteState)
 
         track.isFavorite = newFavoriteState
 
         viewModelScope.launch {
             if (newFavoriteState) {
-                favoritesViewModel.addToFavorites(track)
+                favoritesInteractor.addToFavorites(track)
             } else {
-                favoritesViewModel.removeFromFavorites(track)
+                favoritesInteractor.removeFromFavorites(track)
             }
         }
     }

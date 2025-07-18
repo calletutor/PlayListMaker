@@ -1,7 +1,7 @@
 package com.example.playlistmaker.DI
 
-import com.example.playlistmaker.A_NEW.domain.FavoritesInteractor
-import com.example.playlistmaker.A_NEW.domain.FavoritesInteractorImpl
+import com.example.playlistmaker.favorites.domain.FavoritesInteractor
+import com.example.playlistmaker.favorites.domain.FavoritesInteractorImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractorImpl
 import com.example.playlistmaker.search.domain.SearchTracksInteractor

@@ -18,8 +18,6 @@ import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-
-
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel()
@@ -47,11 +45,12 @@ class PlayerFragment : Fragment() {
 
         (activity as? MainActivity)?.setBottomNavVisible(false)
 
-        viewModel.preparePlayer(currentTrack)
         bindTrackInfoToUI(currentTrack)
 
         setupObservers()
         setupClickListeners()
+
+        viewModel.preparePlayer(currentTrack)
 
     }
 
@@ -59,6 +58,13 @@ class PlayerFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             binding.playImage.setImageResource(state.buttonResId)
             binding.playingTime.text = state.playTime
+
+            val iconRes = if (state.isFavorite) {
+                R.drawable.favorites_button_selected
+            } else {
+                R.drawable.favorites_button_unselected
+            }
+            binding.favoritesImage.setImageResource(iconRes)
         }
     }
 
@@ -68,23 +74,11 @@ class PlayerFragment : Fragment() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        viewModel.trackFavoriteState.observe(viewLifecycleOwner) { isFavorite ->
-            val iconRes = if (isFavorite) {
-                R.drawable.favorites_button_selected
-            } else {
-                R.drawable.favorites_button_unselected
-            }
-            binding.favoritesImage.setImageResource(iconRes)
-        }
-
-        binding.favoritesImage.setOnClickListener{
-
+        binding.favoritesImage.setOnClickListener {
             viewModel.toggleFavorite(currentTrack)
-
-
         }
 
     }

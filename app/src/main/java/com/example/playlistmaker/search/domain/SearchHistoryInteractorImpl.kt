@@ -1,6 +1,6 @@
 package com.example.playlistmaker.search.domain
 
-import com.example.playlistmaker.A_NEW.domain.FavoritesRepository
+import com.example.playlistmaker.favorites.domain.FavoritesRepository
 import kotlinx.coroutines.flow.firstOrNull
 
 
