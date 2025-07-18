@@ -68,6 +68,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+        <!--android:visibility="gone"-->
         <TextView
             android:id="@+id/searchHistoryTitle"
             android:layout_width="match_parent"
@@ -77,7 +79,8 @@
             android:paddingVertical="0dp"
             android:text="@string/searchHistory"
             android:textSize="@dimen/text_size_19"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -92,6 +95,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <!--android:visibility="gone"-->
         <Button
             android:id="@+id/clearHistory"
             style="@style/refreshButton"
@@ -100,7 +105,8 @@
             android:layout_gravity="center"
             android:text="@string/clearSearchHistory"
             android:textSize="@dimen/text_size_14"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
 
     </LinearLayout>
 

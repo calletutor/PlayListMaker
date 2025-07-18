@@ -6,6 +6,15 @@ class PlayerInteractorImpl(
     private val playerRepository: PlayerRepository
 ) : PlayerInteractor {
 
+
+
+    override fun getCurrentPosition(): Int {
+        return playerRepository.getCurrentPosition()
+    }
+
+
+
+
     override fun preparePlayer(
         url: String,
         onPrepared: () -> Unit,
@@ -29,4 +38,7 @@ class PlayerInteractorImpl(
     override fun release() {
         playerRepository.release()
     }
+
+
+
 }

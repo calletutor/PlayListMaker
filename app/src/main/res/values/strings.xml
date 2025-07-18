@@ -47,5 +47,8 @@
     <string name="country_hint">country</string>
 
     <string name="nothing_found">Ничего не найдено.</string>
+    <string name="connection_failed">Проблема с сетью.</string>"
+    <string name="unknown_error">Неизвестная ошибка.</string>">
+    <string name="default_play_time">00:00</string>
 
 </resources>

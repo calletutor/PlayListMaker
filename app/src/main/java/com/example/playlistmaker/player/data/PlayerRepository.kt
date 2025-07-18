@@ -6,4 +6,8 @@ interface PlayerRepository {
     fun pause()
     fun isPlaying(): Boolean
     fun release()
+
+
+    fun getCurrentPosition(): Int
+
 }

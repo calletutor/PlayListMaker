@@ -1,6 +1,8 @@
 package com.example.playlistmaker.DI
 
 import android.content.Context
+import android.content.res.Resources
+import com.example.playlistmaker.R
 import com.example.playlistmaker.main.ui.SETTINGS_PREFS
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -92,7 +94,8 @@ object DataModule {
         single { AppLinkProviderImpl(get()) }
 
         viewModel { SearchViewModel(get(), get()) }
-        viewModel { PlayerViewModel(get()) }
+
+        viewModel { PlayerViewModel(get(), get<Resources>().getString(R.string.default_play_time)) }
         viewModel { SettingsViewModel(get(), get()) }
     }
 }

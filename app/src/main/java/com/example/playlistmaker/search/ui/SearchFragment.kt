@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +14,17 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
-import com.example.playlistmaker.main.ui.MainActivity
 import com.example.playlistmaker.search.domain.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchFragment : Fragment() {
+
+    private var isHistory: Boolean = false
 
     private val viewModel: SearchViewModel by viewModel()
 
@@ -40,6 +39,7 @@ class SearchFragment : Fragment() {
     private lateinit var tracksAdapter: TracksAdapter
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,15 +57,15 @@ class SearchFragment : Fragment() {
         initListeners()
         observeViewModel()
 
+        binding.searchInputEditText.setText(viewModel.currentQuery)
+        binding.clearButton.isVisible = !viewModel.currentQuery.isNullOrEmpty()
 
-        savedInstanceState?.getString(EDIT_TEXT)?.let {
-            binding.searchInputEditText.setText(it)
+        isHistory = viewModel.uiState.value?.isShowingHistory ?: false
+
+        if (isHistory) {
+            viewModel.loadSearchHistory()
         }
 
-
-        view.post {
-            binding.searchInputEditText.setText("")
-        }
     }
 
     private fun initRecyclerView() {
@@ -81,39 +81,69 @@ class SearchFragment : Fragment() {
 
     private fun initListeners() {
         binding.searchInputEditText.setOnFocusChangeListener { _, hasFocus ->
+
             if (hasFocus && binding.searchInputEditText.text.isEmpty()) {
-                viewModel.loadSearchHistory()
+
+                if (!isHistory){
+                    viewModel.loadSearchHistory()
+                }
+
 
                 showKeyboard(binding.searchInputEditText)
-
-            } else {
-                binding.clearHistory.isVisible = false
             }
         }
 
         binding.searchInputEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                viewModel.clearTracks()
-                tracksAdapter.tracks = mutableListOf()
-                tracksAdapter.notifyDataSetChanged()
-                viewModel.cancelSearchDebounce()
-                binding.progressBar.isVisible = false
-                binding.searchFailedImage.isVisible = false
-                binding.errorMessage.isVisible = false
 
-                if (binding.searchInputEditText.hasFocus() && s.isNullOrEmpty()) {
-                    viewModel.loadSearchHistory()
-                    binding.clearButton.isVisible = false
-                } else {
-                    viewModel.searchDebounce(s.toString())
-                    binding.clearButton.isVisible = true
+                viewModel.currentQuery = s.toString()
+
+                val currentInput = s?.toString().orEmpty()
+                if (currentInput != viewModel.currentQuery) {
+                    viewModel.clearErrorMessage()
+                }
+
+
+                if (binding.searchInputEditText.hasFocus()){
+                    viewModel.clearTracks()
+                    binding.searchHistoryTitle.isVisible = false
                     binding.clearHistory.isVisible = false
                     binding.refreshButton.isVisible = false
+                }
+
+
+                if (binding.searchInputEditText.hasFocus()) {
+                    if (s.isNullOrEmpty()) {
+
+                        viewModel.loadSearchHistory()
+                        binding.clearButton.isVisible = false
+
+                        viewModel.cancelSearchDebounce()
+
+                    } else {
+
+                        viewModel.clearTracks()
+
+                        binding.searchFailedImage.isVisible = false
+                        binding.errorMessage.isVisible = false
+                        binding.refreshButton.isVisible = false
+
+                        viewModel.cancelSearchDebounce()
+                        binding.searchHistoryTitle.isVisible = false
+                        binding.clearHistory.isVisible = false
+
+                        viewModel.hideHistory()
+
+                        viewModel.searchDebounce(s.toString())
+                        binding.clearButton.isVisible = true
+                    }
                 }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+
         })
 
         binding.refreshButton.setOnClickListener {
@@ -126,43 +156,60 @@ class SearchFragment : Fragment() {
 
         binding.clearButton.setOnClickListener {
             binding.searchInputEditText.setText("")
+            binding.clearButton.isVisible = false
+
+            viewModel.cancelSearchDebounce()
+            viewModel.clearTracks()
+            viewModel.loadSearchHistory()
+
         }
 
         binding.clearHistory.setOnClickListener {
             viewModel.clearTracks()
-            tracksAdapter.tracks = mutableListOf()
-            tracksAdapter.notifyDataSetChanged()
             viewModel.clearHistory()
-            binding.clearHistory.isVisible = false
+
         }
     }
 
     private fun observeViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            binding.clearHistory.isVisible =
-                state.hasHistory && binding.searchInputEditText.text.isEmpty() && binding.searchInputEditText.hasFocus()
 
-            binding.searchHistoryTitle.isVisible =
-                state.hasHistory && binding.searchInputEditText.text.isEmpty() && binding.searchInputEditText.hasFocus()
+            binding.searchHistoryTitle.isVisible = state.isShowingHistory
+            binding.clearHistory.isVisible = state.isShowingHistory
+
 
             if (state.tracks.isNotEmpty()) {
+
+                tracksAdapter.tracks = state.tracks.toMutableList()
                 binding.errorMessage.isVisible = false
                 binding.searchFailedImage.isVisible = false
                 binding.refreshButton.isVisible = false
-
-                tracksAdapter.tracks = state.tracks.toMutableList()
-                tracksAdapter.notifyDataSetChanged()
                 hideKeyboard()
+
+            }else{
+                tracksAdapter.tracks = mutableListOf()
             }
+
+            tracksAdapter.notifyDataSetChanged()
 
             binding.progressBar.isVisible = state.isLoading
 
-            state.errorMessage?.let { errorMessage ->
-                when (errorMessage) {
-                    "Ничего не найдено." -> showNotFoundMessage()
-                    "Проблема с сетью." -> showNetworkError()
-                    else -> showError(errorMessage)
+            state.error?.let { error ->
+
+                val currentInput = binding.searchInputEditText.text.toString()
+
+                if (state.lastQuery == currentInput) {
+                    when (error) {
+                        SearchError.NothingFound-> showNotFoundMessage()
+                        SearchError.Network-> showNetworkError()
+                        else -> showUnknownError()
+                    }
+                }else{
+                    binding.errorMessage.isVisible = false
+                    binding.searchFailedImage.isVisible = false
+                    binding.refreshButton.isVisible = false
                 }
+
             } ?: run {
                 binding.searchFailedImage.isVisible = false
                 binding.errorMessage.isVisible = false
@@ -188,27 +235,31 @@ class SearchFragment : Fragment() {
 
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
     private fun showNotFoundMessage() {
-        binding.errorMessage.text = "Ничего не найдено."
+        binding.errorMessage.text = getString(R.string.nothing_found)
         binding.searchFailedImage.setImageResource(R.drawable.ic_not_found)
         binding.searchFailedImage.isVisible = true
         binding.errorMessage.isVisible = true
     }
 
     private fun showNetworkError() {
-        binding.errorMessage.text = "Проблема с сетью."
+        binding.errorMessage.text = getString(R.string.connection_failed)
         binding.searchFailedImage.setImageResource(R.drawable.ic_no_connecton)
         binding.searchFailedImage.isVisible = true
         binding.errorMessage.isVisible = true
         binding.refreshButton.isVisible = true
     }
 
+    private fun showUnknownError() {
+        binding.errorMessage.text = getString(R.string.unknown_error)
+        binding.searchFailedImage.isVisible = true
+        binding.errorMessage.isVisible = true
+        binding.refreshButton.isVisible = true
+    }
+
     private fun hideKeyboard() {
-        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.searchInputEditText.windowToken, 0)
     }
 
@@ -227,23 +278,18 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        viewModel.clearTracks()
-        tracksAdapter.tracks = mutableListOf()
-        tracksAdapter.notifyDataSetChanged()
-
-        binding.searchInputEditText.clearFocus()
-
         handler.removeCallbacks(clickRunnable)
         _binding = null
 
     }
 
-
     private fun showKeyboard(editText: EditText) {
 
         editText.post {
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 }
+

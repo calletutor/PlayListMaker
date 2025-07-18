@@ -1,9 +1,7 @@
 package com.example.playlistmaker.player.ui
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -15,23 +13,17 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.main.ui.MainActivity
 import com.example.playlistmaker.search.domain.Track
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-
 class PlayerFragment : Fragment() {
-
-
 
     private val viewModel: PlayerViewModel by viewModel()
 
     private var _binding: PlayerFragmentBinding? = null
     private val binding get() = _binding!!
 
-    // Получаем аргумент через Safe Args
     private val currentTrack: Track by lazy {
         PlayerFragmentArgs.fromBundle(requireArguments()).track
     }

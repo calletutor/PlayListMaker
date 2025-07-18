@@ -11,4 +11,8 @@ class PlayerRepositoryImpl(
     override fun pause() = mediaPlayerWrapper.pause()
     override fun isPlaying() = mediaPlayerWrapper.isPlaying()
     override fun release() = mediaPlayerWrapper.release()
+
+    override fun getCurrentPosition(): Int {
+        return mediaPlayerWrapper.getCurrentPosition()
+    }
 }
