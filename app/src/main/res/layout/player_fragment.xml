@@ -8,11 +8,11 @@
     android:background="@color/dual_color4"
     >
 
+    <!--android:layout_marginTop="40dp"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +81,7 @@
         android:layout_marginEnd="@dimen/margin_to_the_edge"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/favorites_button"
+        android:src="@drawable/favorites_button_unselected"
         app:layout_constraintBottom_toBottomOf="@id/playImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/playImage" />

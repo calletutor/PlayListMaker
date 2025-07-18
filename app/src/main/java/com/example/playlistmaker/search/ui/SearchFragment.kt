@@ -11,15 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.A_NEW.ui.FavoritesViewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.domain.Track
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.flow.first
 
 
 class SearchFragment : Fragment() {
@@ -27,6 +31,7 @@ class SearchFragment : Fragment() {
     private var isHistory: Boolean = false
 
     private val viewModel: SearchViewModel by viewModel()
+    private val favoritesViewModel: FavoritesViewModel by viewModel()
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
@@ -63,9 +68,10 @@ class SearchFragment : Fragment() {
         isHistory = viewModel.uiState.value?.isShowingHistory ?: false
 
         if (isHistory) {
-            viewModel.loadSearchHistory()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.loadSearchHistory()
+            }
         }
-
     }
 
     private fun initRecyclerView() {
@@ -84,8 +90,10 @@ class SearchFragment : Fragment() {
 
             if (hasFocus && binding.searchInputEditText.text.isEmpty()) {
 
-                if (!isHistory){
-                    viewModel.loadSearchHistory()
+                if (!isHistory) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.loadSearchHistory()
+                    }
                 }
 
 
@@ -104,7 +112,7 @@ class SearchFragment : Fragment() {
                 }
 
 
-                if (binding.searchInputEditText.hasFocus()){
+                if (binding.searchInputEditText.hasFocus()) {
                     viewModel.clearTracks()
                     binding.searchHistoryTitle.isVisible = false
                     binding.clearHistory.isVisible = false
@@ -115,7 +123,11 @@ class SearchFragment : Fragment() {
                 if (binding.searchInputEditText.hasFocus()) {
                     if (s.isNullOrEmpty()) {
 
-                        viewModel.loadSearchHistory()
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.loadSearchHistory()
+                        }
+
+
                         binding.clearButton.isVisible = false
 
                         viewModel.cancelSearchDebounce()
@@ -160,7 +172,10 @@ class SearchFragment : Fragment() {
 
             viewModel.cancelSearchDebounce()
             viewModel.clearTracks()
-            viewModel.loadSearchHistory()
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.loadSearchHistory()
+            }
 
         }
 
@@ -186,7 +201,7 @@ class SearchFragment : Fragment() {
                 binding.refreshButton.isVisible = false
                 hideKeyboard()
 
-            }else{
+            } else {
                 tracksAdapter.tracks = mutableListOf()
             }
 
@@ -200,11 +215,11 @@ class SearchFragment : Fragment() {
 
                 if (state.lastQuery == currentInput) {
                     when (error) {
-                        SearchError.NothingFound-> showNotFoundMessage()
-                        SearchError.Network-> showNetworkError()
+                        SearchError.NothingFound -> showNotFoundMessage()
+                        SearchError.Network -> showNetworkError()
                         else -> showUnknownError()
                     }
-                }else{
+                } else {
                     binding.errorMessage.isVisible = false
                     binding.searchFailedImage.isVisible = false
                     binding.refreshButton.isVisible = false

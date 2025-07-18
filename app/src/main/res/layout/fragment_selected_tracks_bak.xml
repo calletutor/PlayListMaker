@@ -5,27 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_weight="1"
-        android:paddingStart="12dp"
-        android:paddingEnd="10dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/no_results_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
-        app:srcCompat="@drawable/ic_not_found"
-        android:visibility="gone"
-        />
+        app:srcCompat="@drawable/ic_not_found" />
 
     <TextView
         android:id="@+id/errorMessage"
@@ -36,6 +21,5 @@
         android:text="@string/media_library_is_empty"
         android:textColor="@color/dual_color"
         android:textSize="@dimen/text_size_19"
-        android:visibility="gone"
         />
 </LinearLayout>

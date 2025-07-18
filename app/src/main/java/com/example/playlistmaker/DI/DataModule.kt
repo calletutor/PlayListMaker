@@ -18,13 +18,13 @@ import com.example.playlistmaker.search.data.NetworkClient
 import com.example.playlistmaker.search.data.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.TrackMapper
-import com.example.playlistmaker.search.data.TracksRepository
-import com.example.playlistmaker.search.data.TracksRepositoryImpl
+import com.example.playlistmaker.search.data.SearchTracksRepository
+import com.example.playlistmaker.search.data.SearchTracksRepositoryImpl
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.SearchHistoryRepository
-import com.example.playlistmaker.search.domain.TracksInteractor
-import com.example.playlistmaker.search.domain.TracksInteractorImpl
+import com.example.playlistmaker.search.domain.SearchTracksInteractor
+import com.example.playlistmaker.search.domain.SearchTracksInteractorImpl
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.SettingsInteractor
@@ -66,7 +66,7 @@ object DataModule {
             get<Context>().getSharedPreferences(TRACK_HISTORY, Context.MODE_PRIVATE)
         }
 
-        single<TracksRepository> { TracksRepositoryImpl(get(), get()) }
+        single<SearchTracksRepository> { SearchTracksRepositoryImpl(get(), get(), get()) }
         single<SearchHistoryRepository> {
             SearchHistoryRepositoryImpl(
                 get(named(TRACK_HISTORY)),
@@ -76,8 +76,8 @@ object DataModule {
         single<SettingsRepository> { SettingsRepositoryImpl(get(named(SETTINGS_PREFS))) }
         single<PlayerRepository> { PlayerRepositoryImpl(get()) }
 
-        single<TracksInteractor> { TracksInteractorImpl(get()) }
-        single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
+        single<SearchTracksInteractor> { SearchTracksInteractorImpl(get()) }
+        single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get(), get()) }
         single<SettingsInteractor> { SettingsInteractorImpl(get()) }
         single<PlayerInteractor> { PlayerInteractorImpl(get()) }
         single<SharingInteractor> {
@@ -95,7 +95,14 @@ object DataModule {
 
         viewModel { SearchViewModel(get(), get()) }
 
-        viewModel { PlayerViewModel(get(), get<Resources>().getString(R.string.default_play_time)) }
+        viewModel {
+            PlayerViewModel(
+                 get(),
+                 get<Resources>().getString(R.string.default_play_time),
+                 get()
+            )
+        }
+
         viewModel { SettingsViewModel(get(), get()) }
     }
 }

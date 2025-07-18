@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.A_NEW.ui.FavoritesViewModel
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.Track
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val defaultPlayTime: String
+    private val defaultPlayTime: String,
+    private val favoritesViewModel: FavoritesViewModel
 ) : ViewModel() {
 
     companion object {
@@ -27,9 +29,14 @@ class PlayerViewModel(
         private const val DELAY = 300L
     }
 
-    private val _uiState = MutableLiveData(PlayerScreenState(
-        playTime = defaultPlayTime
-    ))
+    private val _uiState = MutableLiveData(
+        PlayerScreenState(
+            playTime = defaultPlayTime
+        )
+    )
+
+    private val _trackFavoriteState = MutableLiveData<Boolean>()
+    val trackFavoriteState: LiveData<Boolean> get() = _trackFavoriteState
 
     val uiState: LiveData<PlayerScreenState> = _uiState
 
@@ -38,6 +45,9 @@ class PlayerViewModel(
     var currentTrack: Track? = null
 
     fun preparePlayer(track: Track) {
+
+        _trackFavoriteState.value = track.isFavorite
+
         currentTrack = track
         track.previewUrl?.let {
             playerInteractor.preparePlayer(
@@ -94,14 +104,11 @@ class PlayerViewModel(
         timerJob?.cancel()
 
         timerJob = viewModelScope.launch {
-            var lastUpdateTime = System.currentTimeMillis()
 
             while (isActive) {
                 if (playerState == STATE_PLAYING) {
 
                     val currentPosition = playerInteractor.getCurrentPosition()
-
-                    val currentTime = System.currentTimeMillis()
 
                     _uiState.postValue(
                         _uiState.value?.copy(
@@ -124,5 +131,23 @@ class PlayerViewModel(
         super.onCleared()
         playerInteractor.release()
         timerJob?.cancel()
+    }
+
+    fun toggleFavorite(track: Track) {
+
+        val isCurrentlyFavorite = _trackFavoriteState.value ?: false
+        val newFavoriteState = !isCurrentlyFavorite
+
+        _trackFavoriteState.value = newFavoriteState
+
+        track.isFavorite = newFavoriteState
+
+        viewModelScope.launch {
+            if (newFavoriteState) {
+                favoritesViewModel.addToFavorites(track)
+            } else {
+                favoritesViewModel.removeFromFavorites(track)
+            }
+        }
     }
 }

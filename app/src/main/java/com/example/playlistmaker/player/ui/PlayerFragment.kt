@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
+
+
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel()
@@ -67,6 +70,23 @@ class PlayerFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+
+        viewModel.trackFavoriteState.observe(viewLifecycleOwner) { isFavorite ->
+            val iconRes = if (isFavorite) {
+                R.drawable.favorites_button_selected
+            } else {
+                R.drawable.favorites_button_unselected
+            }
+            binding.favoritesImage.setImageResource(iconRes)
+        }
+
+        binding.favoritesImage.setOnClickListener{
+
+            viewModel.toggleFavorite(currentTrack)
+
+
+        }
+
     }
 
     private fun bindTrackInfoToUI(track: Track) {

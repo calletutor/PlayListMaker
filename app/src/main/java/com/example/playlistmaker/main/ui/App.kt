@@ -1,10 +1,13 @@
 package com.example.playlistmaker.main.ui
 
 import android.app.Application
+import com.example.playlistmaker.A_NEW.DI.dbDataModule
+import com.example.playlistmaker.A_NEW.DI.viewModelModule
 import com.example.playlistmaker.DI.DataModule.dataModule
 import com.example.playlistmaker.DI.InteractorModule.interactorModule
 import com.example.playlistmaker.DI.NavigationModule.navigationModule
 import com.example.playlistmaker.DI.RepositoryModule.repositoryModule
+import com.example.playlistmaker.DI.ViewModelSelectedTracksModule.mediaModule
 import com.example.playlistmaker.settings.domain.ScreenModeHandler
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import org.koin.android.ext.android.getKoin
@@ -28,11 +31,14 @@ class App : Application() {
                 dataModule,
                 repositoryModule,
                 interactorModule,
-                navigationModule
+                navigationModule,
+                dbDataModule,
+                viewModelModule,
+                mediaModule
             )
         }
 
-        val settingsInteractor= getKoin().get<SettingsInteractor>()
+        val settingsInteractor = getKoin().get<SettingsInteractor>()
         val screenModeHandler = ScreenModeHandler(settingsInteractor)
 
         screenModeHandler.setCurrentScreenMode()
