@@ -1,6 +1,5 @@
 <resources>
 
-
     android:text=""
 
     <string name="media_library_is_empty">Ваша медиатека пуста</string>
@@ -50,5 +49,26 @@
     <string name="connection_failed">Проблема с сетью.</string>"
     <string name="unknown_error">Неизвестная ошибка.</string>">
     <string name="default_play_time">00:00</string>
+
+    <string name="error_playlist_exists">Плейлист с именем "%1$s" уже существует</string>
+    <string name="playlist_created_successfully">Плейлист "%1$s" успешно создан</string>
+
+    <string name="unsaved_changes">Несохранённые изменения</string>
+    <string name="sure_to_leave">Вы уверены, что хотите выйти? Несохранённые данные будут потеряны.</string>
+    <string name="to_leave">Выйти</string>
+    <string name="to_stay">Остаться</string>
+
+    <string name="track_word_form1">треков</string>
+    <string name="track_word_form2">трек</string>
+    <string name="track_word_form3">трека</string>
+
+    <string name="create">Создать</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="name">Название</string>
+    <string name="description">Описание</string>
+
+    <string name="playlist_name">playlist name</string>
+    <string name="playlist_description">playlist description</string>
+
 
 </resources>

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ViewModelPlayLists : ViewModel() {
+class PlayListsViewModel : ViewModel() {
 
     private val _someData = MutableLiveData<String>("Плейлисты")
     val someData: LiveData<String> = _someData
@@ -12,5 +12,4 @@ class ViewModelPlayLists : ViewModel() {
     fun someFunction(name: String) {
         _someData.value = name
     }
-
 }

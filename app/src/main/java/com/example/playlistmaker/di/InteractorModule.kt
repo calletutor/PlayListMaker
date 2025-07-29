@@ -1,4 +1,4 @@
-package com.example.playlistmaker.DI
+package com.example.playlistmaker.di
 
 import com.example.playlistmaker.favorites.domain.FavoritesInteractor
 import com.example.playlistmaker.favorites.domain.FavoritesInteractorImpl

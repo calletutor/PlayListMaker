@@ -1,4 +1,4 @@
-package com.example.playlistmaker.DI
+package com.example.playlistmaker.di
 
 import com.example.playlistmaker.favorites.data.FavoritesRepositoryImpl
 import com.example.playlistmaker.favorites.domain.FavoritesRepository
@@ -19,7 +19,7 @@ object RepositoryModule {
 
     val repositoryModule = module {
 
-        single<FavoritesRepository> { FavoritesRepositoryImpl(get()) }// get() автоматически предоставит TracksDatabase
+        single<FavoritesRepository> { FavoritesRepositoryImpl(get()) }
         single<SearchTracksRepository> { SearchTracksRepositoryImpl(get(), get(), get()) }
         single<SettingsRepository> { SettingsRepositoryImpl(get(named(SETTINGS_PREFS))) }
         single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get(named(TRACK_HISTORY)), get()) }

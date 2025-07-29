@@ -1,4 +1,4 @@
-package com.example.playlistmaker.DI
+package com.example.playlistmaker.di
 
 import com.example.playlistmaker.sharing.data.AppLinkProviderImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl

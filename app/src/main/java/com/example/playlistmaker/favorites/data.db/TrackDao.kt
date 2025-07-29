@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrackDao {
 
+    @Query("SELECT * FROM favorite_tracks WHERE trackId = :trackId LIMIT 1")
+    suspend fun getTrackById(trackId: Int): TrackEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToFavorites(track: TrackEntity)
 

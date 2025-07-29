@@ -1,24 +1,20 @@
 package com.example.playlistmaker.media.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSelectedTracksBinding
 import com.example.playlistmaker.search.ui.TracksAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class FragmentSelectedTracks : Fragment() {
+class SelectedTracksFragment : Fragment() {
 
-    private val viewModel: ViewModelSelectedTracks by viewModel()
+    private val viewModel: SelectedTracksViewModel by viewModel()
     private var _binding: FragmentSelectedTracksBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: TracksAdapter
@@ -37,11 +33,9 @@ class FragmentSelectedTracks : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = TracksAdapter(TracksAdapter.TrackClickListener { track ->
-            val action = FragmentSelectedTracksDirections
-                .actionMediaFragmentToPlayerFragment(track)
 
-            findNavController().navigate(action)//тоже работает
-            //NavHostFragment.findNavController(requireParentFragment()).navigate(action) //тоже работает
+            val action = MediaFragmentDirections.actionMediaFragmentToPlayerFragment(track)
+            NavHostFragment.findNavController(requireParentFragment()).navigate(action)
 
         })
 

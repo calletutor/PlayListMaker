@@ -1,4 +1,4 @@
-package com.example.playlistmaker.DI
+package com.example.playlistmaker.di
 
 import android.content.Context
 import android.content.res.Resources
@@ -97,9 +97,11 @@ object DataModule {
 
         viewModel {
             PlayerViewModel(
-                 get(),
-                 get<Resources>().getString(R.string.default_play_time),
-                 get()
+                get(),
+                get<Resources>().getString(R.string.default_play_time),
+                get(),
+                get(),
+                get()
             )
         }
 
