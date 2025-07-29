@@ -1,16 +1,28 @@
 package com.example.playlistmaker.search.domain
 
+import com.example.playlistmaker.favorites.domain.FavoritesRepository
+import kotlinx.coroutines.flow.firstOrNull
 
-class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepository) :
+
+class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepository,
+                                  private val favoritesRepository: FavoritesRepository
+) :
     SearchHistoryInteractor {
 
     companion object {
         const val HISTORY_SIZE = 10
     }
 
-    override fun getSavedHistory(consumer: SearchHistoryInteractor.SearchHistoryConsumer) {
+    override suspend fun getSavedHistory(consumer: SearchHistoryInteractor.SearchHistoryConsumer) {
         val history = repository.getSavedHistoryList()
-        consumer.consume(history)
+        val favoriteTracks = favoritesRepository.getAllFavoriteTracks().firstOrNull() ?: emptyList()
+
+        val updatedHistory = history.map { track ->
+            track.isFavorite = favoriteTracks.any { it.trackId == track.trackId }
+            track
+        }
+
+        consumer.consume(updatedHistory)
     }
 
     override fun addTrackToHistory(track: Track) {

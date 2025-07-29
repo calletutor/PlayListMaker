@@ -11,16 +11,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.domain.Track
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
+import kotlinx.coroutines.flow.first
 
 class SearchFragment : Fragment() {
 
@@ -39,7 +41,6 @@ class SearchFragment : Fragment() {
     private lateinit var tracksAdapter: TracksAdapter
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,9 +64,10 @@ class SearchFragment : Fragment() {
         isHistory = viewModel.uiState.value?.isShowingHistory ?: false
 
         if (isHistory) {
-            viewModel.loadSearchHistory()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.loadSearchHistory()
+            }
         }
-
     }
 
     private fun initRecyclerView() {
@@ -84,8 +86,10 @@ class SearchFragment : Fragment() {
 
             if (hasFocus && binding.searchInputEditText.text.isEmpty()) {
 
-                if (!isHistory){
-                    viewModel.loadSearchHistory()
+                if (!isHistory) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.loadSearchHistory()
+                    }
                 }
 
 
@@ -104,7 +108,7 @@ class SearchFragment : Fragment() {
                 }
 
 
-                if (binding.searchInputEditText.hasFocus()){
+                if (binding.searchInputEditText.hasFocus()) {
                     viewModel.clearTracks()
                     binding.searchHistoryTitle.isVisible = false
                     binding.clearHistory.isVisible = false
@@ -115,7 +119,10 @@ class SearchFragment : Fragment() {
                 if (binding.searchInputEditText.hasFocus()) {
                     if (s.isNullOrEmpty()) {
 
-                        viewModel.loadSearchHistory()
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.loadSearchHistory()
+                        }
+
                         binding.clearButton.isVisible = false
 
                         viewModel.cancelSearchDebounce()
@@ -143,7 +150,6 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-
         })
 
         binding.refreshButton.setOnClickListener {
@@ -160,7 +166,10 @@ class SearchFragment : Fragment() {
 
             viewModel.cancelSearchDebounce()
             viewModel.clearTracks()
-            viewModel.loadSearchHistory()
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.loadSearchHistory()
+            }
 
         }
 
@@ -177,7 +186,6 @@ class SearchFragment : Fragment() {
             binding.searchHistoryTitle.isVisible = state.isShowingHistory
             binding.clearHistory.isVisible = state.isShowingHistory
 
-
             if (state.tracks.isNotEmpty()) {
 
                 tracksAdapter.tracks = state.tracks.toMutableList()
@@ -186,7 +194,7 @@ class SearchFragment : Fragment() {
                 binding.refreshButton.isVisible = false
                 hideKeyboard()
 
-            }else{
+            } else {
                 tracksAdapter.tracks = mutableListOf()
             }
 
@@ -200,11 +208,11 @@ class SearchFragment : Fragment() {
 
                 if (state.lastQuery == currentInput) {
                     when (error) {
-                        SearchError.NothingFound-> showNotFoundMessage()
-                        SearchError.Network-> showNetworkError()
+                        SearchError.NothingFound -> showNotFoundMessage()
+                        SearchError.Network -> showNetworkError()
                         else -> showUnknownError()
                     }
-                }else{
+                } else {
                     binding.errorMessage.isVisible = false
                     binding.searchFailedImage.isVisible = false
                     binding.refreshButton.isVisible = false
@@ -292,4 +300,3 @@ class SearchFragment : Fragment() {
         }
     }
 }
-

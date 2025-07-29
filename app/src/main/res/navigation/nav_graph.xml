@@ -29,8 +29,24 @@
         android:name="com.example.playlistmaker.media.ui.MediaFragment"
         android:label="media" />
 
+    <action
+        android:id="@+id/action_mediaFragment_to_playerFragment"
+        app:destination="@id/playerFragment" />
+
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.settings.ui.SettingsFragment"
         android:label="settings" />
+
+
+    <fragment
+        android:id="@+id/fragmentSelectedTracks"
+        android:name="com.example.playlistmaker.media.ui.FragmentSelectedTracks"
+        android:label="Selected Tracks">
+
+
+    </fragment>
+
+
+
 </navigation>

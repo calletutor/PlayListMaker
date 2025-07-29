@@ -27,4 +27,5 @@ class TracksAdapter(private val clickListener: TrackClickListener) : RecyclerVie
     }
 
     override fun getItemCount() = tracks.size
+
 }

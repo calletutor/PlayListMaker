@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.android.navigation.safeargs)
     id("kotlin-parcelize")
-
+    id("kotlin-kapt")
 }
 
 android {
@@ -79,4 +79,13 @@ dependencies {
     implementation (libs.kotlinx.coroutines.android)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
 
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.coroutines.android.v173)
+
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
 }
+

@@ -8,14 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.data.SearchScreenState
 import com.example.playlistmaker.search.domain.SearchHistoryInteractor
-import com.example.playlistmaker.search.domain.TracksInteractor
+import com.example.playlistmaker.search.domain.SearchTracksInteractor
 import com.example.playlistmaker.search.domain.Track
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
-    private val tracksInteractor: TracksInteractor,
+    private val tracksInteractor: SearchTracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
@@ -107,7 +107,7 @@ class SearchViewModel(
 
     }
 
-    fun loadSearchHistory() {
+    suspend fun loadSearchHistory() {
         searchHistoryInteractor.getSavedHistory(object :
             SearchHistoryInteractor.SearchHistoryConsumer {
             override fun consume(trackList: List<Track>) {
