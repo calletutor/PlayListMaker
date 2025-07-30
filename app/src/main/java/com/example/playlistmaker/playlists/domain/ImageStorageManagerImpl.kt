@@ -10,9 +10,6 @@ class ImageStorageManagerImpl(
 ) : ImageStorageManager {
 
 
-    companion object {
-        private const val FILE_NAME_TEMPLATE = "playlist_image_%d.jpg"
-    }
 
     override fun copyImageToInternalStorage(uri: Uri): String? {
         return try {
@@ -31,4 +28,10 @@ class ImageStorageManagerImpl(
             null
         }
     }
+
+
+    companion object {
+        private const val FILE_NAME_TEMPLATE = "playlist_image_%d.jpg"
+    }
+
 }

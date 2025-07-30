@@ -7,7 +7,7 @@ import com.example.playlistmaker.di.DataModule.dataModule
 import com.example.playlistmaker.di.InteractorModule.interactorModule
 import com.example.playlistmaker.di.NavigationModule.navigationModule
 import com.example.playlistmaker.di.RepositoryModule.repositoryModule
-import com.example.playlistmaker.di.ViewModelSelectedTracksModule.mediaModule
+import com.example.playlistmaker.di.mediaModule
 import com.example.playlistmaker.playlists.di.playListDatabaseModule
 import com.example.playlistmaker.playlists.di.playlistModule
 import com.example.playlistmaker.settings.domain.ScreenModeHandler
