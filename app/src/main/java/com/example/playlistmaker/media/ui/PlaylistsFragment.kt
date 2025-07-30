@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.databinding.PlaylistsFragmentBinding
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
 import com.example.playlistmaker.playlists.ui.NewPlaylistViewModel
 import com.example.playlistmaker.playlists.ui.PlaylistAdapter
@@ -18,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
-    private var _binding: FragmentPlaylistsBinding? = null
+    private var _binding: PlaylistsFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: NewPlaylistViewModel by viewModel()
@@ -28,7 +27,7 @@ class PlaylistsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        _binding = PlaylistsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

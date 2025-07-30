@@ -18,7 +18,6 @@ class ImageStorageManagerImpl(
         return try {
             val inputStream = context.contentResolver.openInputStream(uri)
             val fileName = FILE_NAME_TEMPLATE.format(System.currentTimeMillis())
-//            val fileName = "playlist_image_${System.currentTimeMillis()}.jpg"
             val file = File(context.filesDir, fileName)
 
             inputStream?.use { input ->

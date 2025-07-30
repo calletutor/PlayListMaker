@@ -23,7 +23,6 @@ import com.example.playlistmaker.playlists.data.db.PlaylistTrackCrossRef
 )
 @TypeConverters(Converters::class)
 
-//@Database(entities = [TrackEntity::class, PlaylistEntity::class], version = 2)
 abstract class PlaylistDatabase : RoomDatabase() {
 
     abstract fun trackDao(): TrackDao

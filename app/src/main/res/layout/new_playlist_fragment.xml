@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dual_color4"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,9 +17,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/new_playlist"
         app:titleTextAppearance="@style/ToolbarTitleTextStyle"
-        app:titleTextColor="@color/black"
-
-        />
+        app:titleTextColor="@color/black" />
 
     <FrameLayout
         android:id="@+id/picture_selecting_button"
@@ -27,59 +26,62 @@
         android:layout_gravity="center"
         android:background="@drawable/dashed_border">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/playlist_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/add_image" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/add_image"
+            app:shapeAppearanceOverlay="@style/RoundedImageView" />
     </FrameLayout>
-
 
     <EditText
         android:id="@+id/new_playlist_name"
         android:layout_width="328dp"
         android:layout_height="55dp"
-        android:layout_marginStart="36dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="22dp"
-        android:layout_marginEnd="36dp"
         android:background="@drawable/edit_text_background"
+        android:gravity="center_vertical|start"
         android:hint="@string/name"
         android:padding="12dp"
         android:textColor="@color/dual_color"
-        android:textColorHint="@color/grey" />
+        android:textColorHint="@color/dual_color"
+        android:textSize="@dimen/text_size_16"
+
+        />
 
     <EditText
         android:id="@+id/new_playlist_description"
         android:layout_width="328dp"
         android:layout_height="55dp"
-        android:layout_marginStart="36dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="36dp"
         android:background="@drawable/edit_text_background"
+        android:gravity="center_vertical|start"
         android:hint="@string/description"
         android:padding="12dp"
         android:textColor="@color/dual_color"
-        android:textColorHint="@color/grey"
+        android:textColorHint="@color/dual_color"
+        android:textSize="@dimen/text_size_16"
 
         />
-
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_create_playlist"
         style="@style/MyButtonStyle"
         android:layout_width="326dp"
         android:layout_height="44dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
         android:enabled="false"
+        android:gravity="center_vertical|center"
         android:text="@string/create"
         android:textAllCaps="false"
         android:textSize="@dimen/text_size_16"

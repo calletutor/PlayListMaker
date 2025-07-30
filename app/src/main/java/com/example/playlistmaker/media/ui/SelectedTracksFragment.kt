@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.databinding.FragmentSelectedTracksBinding
+import com.example.playlistmaker.databinding.SelectedTracksFragmentBinding
 import com.example.playlistmaker.search.ui.TracksAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -15,7 +15,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SelectedTracksFragment : Fragment() {
 
     private val viewModel: SelectedTracksViewModel by viewModel()
-    private var _binding: FragmentSelectedTracksBinding? = null
+    private var _binding: SelectedTracksFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: TracksAdapter
 
@@ -25,7 +25,7 @@ class SelectedTracksFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentSelectedTracksBinding.inflate(inflater, container, false)
+        _binding = SelectedTracksFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

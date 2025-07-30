@@ -26,7 +26,6 @@ interface PlaylistTrackDao {
     //для тестирования окончание
     ////////////////////////////////////////////////////
 
-    // новая таблица-связка
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCrossRef(crossRef: PlaylistTrackCrossRef):Long
 
