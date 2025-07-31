@@ -8,7 +8,6 @@
     android:background="@color/dual_color4"
     >
 
-    <!--android:layout_marginTop="40dp"-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbarStyle"
@@ -100,13 +99,13 @@
         />
 
     <ImageView
-        android:id="@+id/addImage"
+        android:id="@+id/add_to_playlist_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_to_the_edge"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/add_button"
+        android:src="@drawable/add_to_playlist_button"
         app:layout_constraintBottom_toBottomOf="@id/playImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/playImage" />
@@ -122,7 +121,7 @@
         app:layout_constraintBottom_toTopOf="@id/track_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="00:00"
+        android:text="@string/default_play_time"
         />
 
     <TextView

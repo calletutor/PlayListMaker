@@ -22,31 +22,36 @@
             android:name="track"
             app:argType="com.example.playlistmaker.search.domain.Track"
             app:nullable="false" />
+
+        <action
+            android:id="@+id/action_playerFragment_to_fragmentNewPlayList"
+            app:destination="@id/fragmentNewPlayList" />
+
     </fragment>
 
     <fragment
         android:id="@+id/mediaFragment"
         android:name="com.example.playlistmaker.media.ui.MediaFragment"
-        android:label="media" />
+        android:label="media">
 
-    <action
-        android:id="@+id/action_mediaFragment_to_playerFragment"
-        app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+
+        <action
+            android:id="@+id/action_mediaFragment_to_fragmentNewPlayList"
+            app:destination="@id/fragmentNewPlayList" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentNewPlayList"
+        android:name="com.example.playlistmaker.playlists.ui.NewPlayListFragment"
+        android:label="New Playlist" />
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.settings.ui.SettingsFragment"
         android:label="settings" />
-
-
-    <fragment
-        android:id="@+id/fragmentSelectedTracks"
-        android:name="com.example.playlistmaker.media.ui.FragmentSelectedTracks"
-        android:label="Selected Tracks">
-
-
-    </fragment>
-
-
 
 </navigation>

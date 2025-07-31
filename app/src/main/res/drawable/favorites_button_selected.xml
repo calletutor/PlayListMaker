@@ -3,7 +3,6 @@
     android:height="51dp"
     android:viewportWidth="51"
     android:viewportHeight="51">
-  <!--android:fillColor="#1A1B22"-->
   <path
       android:fillAlpha="0.25"
       android:fillColor="@color/dual_color"

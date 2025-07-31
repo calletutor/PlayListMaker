@@ -6,7 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.R
+import com.example.playlistmaker.favorites.data.db.PlaylistEntity
+import com.example.playlistmaker.favorites.data.db.TrackEntity
 import com.example.playlistmaker.favorites.domain.FavoritesInteractor
+import com.example.playlistmaker.playlists.data.toEntity
+import com.example.playlistmaker.playlists.domain.AddTrackToPlaylistUseCase
+import com.example.playlistmaker.playlists.domain.PlaylistRepository
 import com.example.playlistmaker.search.domain.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,9 +20,15 @@ import kotlinx.coroutines.launch
 
 
 class PlayerViewModel(
+
     private val playerInteractor: PlayerInteractor,
     private val defaultPlayTime: String,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+
+    private val addTrackToPlaylistUseCase: AddTrackToPlaylistUseCase,
+    private val playlistRepository: PlaylistRepository
+
+
 ) : ViewModel() {
 
     enum class PlayerState {
@@ -26,7 +37,6 @@ class PlayerViewModel(
         PLAYING,
         PAUSED
     }
-
 
     companion object {
 
@@ -38,6 +48,18 @@ class PlayerViewModel(
             playTime = defaultPlayTime
         )
     )
+
+    private val _successEvent = MutableLiveData<String?>()
+    val successEvent: LiveData<String?> = _successEvent
+
+    private val _errorEvent = MutableLiveData<String?>()
+    val errorEvent: LiveData<String?> = _errorEvent
+
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> = _toastMessage
+
+    private val _playlists = MutableLiveData<List<PlaylistEntity>>()
+    val playlists: LiveData<List<PlaylistEntity>> = _playlists
 
     val uiState: LiveData<PlayerScreenState> = _uiState
 
@@ -78,7 +100,7 @@ class PlayerViewModel(
         when (playerState) {
             PlayerState.PLAYING -> pausePlayer()
             PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
-            else->{}
+            else -> {}
         }
     }
 
@@ -153,4 +175,52 @@ class PlayerViewModel(
             }
         }
     }
+
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistRepository.getAllPlaylists()
+                .collect { playlists ->
+                    _playlists.postValue(playlists)
+                }
+        }
+    }
+
+
+    fun addTrackToPlaylist(playlistId: Long) {
+        val track = currentTrack
+        if (track == null) {
+            _errorEvent.postValue("Ошибка: трек не найден")
+            return
+        }
+
+        viewModelScope.launch {
+            val wasAdded = playlistRepository.addTrackToPlaylist(
+                playlistId,
+                track.trackId,
+                track.toEntity()
+            )
+            if (wasAdded) {
+                _successEvent.postValue("Трек успешно добавлен в плейлист")
+            } else {
+                _errorEvent.postValue("Трек уже есть в плейлисте")
+            }
+        }
+
+
+    }
+
+    fun clearToastMessage() {
+        _toastMessage.value = null
+    }
+
+
+    fun clearSuccessMessage() {
+        _successEvent.value = null
+    }
+
+    fun clearErrorMessage() {
+        _errorEvent.value = null
+    }
+
 }
