@@ -139,6 +139,12 @@ class PlayerFragment : Fragment() {
             val dialog = BottomSheetDialog(requireContext()).apply {
                 setContentView(R.layout.bottom_sheet_layout)
 
+                setOnShowListener { dialogInterface ->
+                    val bottomSheet = (dialogInterface as BottomSheetDialog)
+                        .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                    bottomSheet?.setBackgroundResource(R.drawable.bg_bottom_sheet)
+                }
+
                 val createButton = findViewById<Button>(R.id.create_new_playlist_button)
                 createButton?.setOnClickListener {
                     dismiss()
@@ -211,8 +217,4 @@ class PlayerFragment : Fragment() {
             context.resources.displayMetrics
         ).toInt()
     }
-
-
-
-
 }

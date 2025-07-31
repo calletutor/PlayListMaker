@@ -53,10 +53,10 @@
     <string name="error_playlist_exists">Плейлист с именем "%1$s" уже существует</string>
     <string name="playlist_created_successfully">Плейлист "%1$s" успешно создан</string>
 
-    <string name="unsaved_changes">Несохранённые изменения</string>
-    <string name="sure_to_leave">Вы уверены, что хотите выйти? Несохранённые данные будут потеряны.</string>
-    <string name="to_leave">Выйти</string>
-    <string name="to_stay">Остаться</string>
+    <string name="unsaved_changes">Завершить создание плейлиста?</string>
+    <string name="sure_to_leave">Все несохраненные данные будут потеряны</string>
+    <string name="to_stay">Отмена</string>
+    <string name="to_leave">Завершить</string>
 
     <string name="track_word_form1">треков</string>
     <string name="track_word_form2">трек</string>

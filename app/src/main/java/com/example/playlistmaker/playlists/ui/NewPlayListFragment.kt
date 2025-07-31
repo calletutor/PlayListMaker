@@ -144,7 +144,7 @@ class NewPlayListFragment : Fragment() {
             .setTitle(R.string.unsaved_changes)
             .setMessage(R.string.sure_to_leave)
             .setPositiveButton(R.string.to_leave) { _, _ ->
-                findNavController().popBackStack() // Закрыть фрагмент
+                findNavController().popBackStack()
             }
             .setNegativeButton(R.string.to_stay, null)
             .show()
