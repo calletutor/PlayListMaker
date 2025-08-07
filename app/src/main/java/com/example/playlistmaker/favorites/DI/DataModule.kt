@@ -1,9 +1,9 @@
-package com.example.playlistmaker.favorites.DI
+package com.example.playlistmaker.favorites.di
 
 import androidx.room.Room
 import com.example.playlistmaker.favorites.data.db.TrackDao
 import com.example.playlistmaker.favorites.data.db.TracksDatabase
-import com.example.playlistmaker.media.ui.ViewModelSelectedTracks
+import com.example.playlistmaker.media.ui.SelectedTracksViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -13,7 +13,7 @@ val dbDataModule = module {
         Room.databaseBuilder(
             androidContext(),
             TracksDatabase::class.java,
-            "tracks_database"
+            "favorites_tracks_database"
         ).build()
     }
 
@@ -24,5 +24,5 @@ val dbDataModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { ViewModelSelectedTracks(get()) }
+    viewModel { SelectedTracksViewModel(get()) }
 }

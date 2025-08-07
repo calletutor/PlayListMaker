@@ -1,13 +1,15 @@
 package com.example.playlistmaker.main.ui
 
 import android.app.Application
-import com.example.playlistmaker.favorites.DI.dbDataModule
-import com.example.playlistmaker.favorites.DI.viewModelModule
-import com.example.playlistmaker.DI.DataModule.dataModule
-import com.example.playlistmaker.DI.InteractorModule.interactorModule
-import com.example.playlistmaker.DI.NavigationModule.navigationModule
-import com.example.playlistmaker.DI.RepositoryModule.repositoryModule
-import com.example.playlistmaker.DI.ViewModelSelectedTracksModule.mediaModule
+import com.example.playlistmaker.favorites.di.dbDataModule
+import com.example.playlistmaker.favorites.di.viewModelModule
+import com.example.playlistmaker.di.DataModule.dataModule
+import com.example.playlistmaker.di.InteractorModule.interactorModule
+import com.example.playlistmaker.di.NavigationModule.navigationModule
+import com.example.playlistmaker.di.RepositoryModule.repositoryModule
+import com.example.playlistmaker.di.mediaModule
+import com.example.playlistmaker.playlists.di.playListDatabaseModule
+import com.example.playlistmaker.playlists.di.playlistModule
 import com.example.playlistmaker.settings.domain.ScreenModeHandler
 import com.example.playlistmaker.settings.domain.SettingsInteractor
 import org.koin.android.ext.android.getKoin
@@ -15,7 +17,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 const val DARK_THEME = "dark_theme"
-const val CURRENT_TRACK_DATA = "currentTrackData"
 const val TRACK_HISTORY = "tracks_history"
 const val SETTINGS_PREFS = "settings_prefs"
 
@@ -34,7 +35,9 @@ class App : Application() {
                 navigationModule,
                 dbDataModule,
                 viewModelModule,
-                mediaModule
+                mediaModule,
+                playlistModule,
+                playListDatabaseModule
             )
         }
 

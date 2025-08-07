@@ -69,4 +69,19 @@
         <item name="android:backgroundTint">@color/dual_color</item>
     </style>
 
+    <style name="MyButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="backgroundTint">@color/button_background_color</item>
+    </style>
+
+    <style name="RoundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="RoundedImageView2" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
+    </style>
+
 </resources>
