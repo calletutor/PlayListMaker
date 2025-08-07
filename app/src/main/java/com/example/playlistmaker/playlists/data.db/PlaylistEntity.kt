@@ -8,11 +8,24 @@ data class PlaylistEntity(
 
     @PrimaryKey(autoGenerate = true)
     val playlistId: Long = 0,
-
     val name: String,
     val description: String?,
     val coverImagePath: String?,
+    val tracksCount: Int = 0,
 
-    val tracksCount: Int = 0
+    val createdAt: Long
+//    val createdAt: Long = System.currentTimeMillis() // сохраняем timestamp
+
 )
 
+//@Entity(tableName = "playlists")
+//data class PlaylistEntity(
+//
+//    @PrimaryKey(autoGenerate = true)
+//    val playlistId: Long = 0,
+//    val name: String,
+//    val description: String?,
+//    val coverImagePath: String?,
+//    val tracksCount: Int = 0
+//
+//)

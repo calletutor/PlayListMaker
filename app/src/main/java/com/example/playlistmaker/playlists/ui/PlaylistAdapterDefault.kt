@@ -13,11 +13,10 @@ import com.example.playlistmaker.playlists.domain.StringProvider
 import com.example.playlistmaker.playlists.utils.WordUtils
 
 
-class PlaylistAdapter (private val stringProvider: StringProvider,
-                       private val mode: PlaylistAdapterMode):
 
-    RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+class PlaylistAdapterDefault(private val stringProvider: StringProvider) :
 
+    RecyclerView.Adapter<PlaylistAdapterDefault.PlaylistViewHolder>() {
 
     private var playlists: List<PlaylistEntity> = emptyList()
     private var onItemClickListener: ((PlaylistEntity) -> Unit)? = null
@@ -29,11 +28,8 @@ class PlaylistAdapter (private val stringProvider: StringProvider,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val layoutId = when (mode) {
-            PlaylistAdapterMode.DEFAULT -> R.layout.playlist_view_for_playlists_fragment
-            PlaylistAdapterMode.COMPACT -> R.layout.playlist_view_for_bottom_sheet
-        }
-        val view = inflater.inflate(layoutId, parent, false)
+
+        val view = inflater.inflate(R.layout.playlist_view_for_playlists_fragment, parent, false)
         return PlaylistViewHolder(view, stringProvider)
     }
 
@@ -48,9 +44,10 @@ class PlaylistAdapter (private val stringProvider: StringProvider,
         onItemClickListener = listener
     }
 
-    class PlaylistViewHolder(itemView: View,
-                             private val stringProvider: StringProvider
-        ) : RecyclerView.ViewHolder(itemView) {
+    class PlaylistViewHolder(
+        itemView: View,
+        private val stringProvider: StringProvider
+    ) : RecyclerView.ViewHolder(itemView) {
         private val playlistName: TextView = itemView.findViewById(R.id.playlist_name)
         private val playlistTracksCount: TextView =
             itemView.findViewById(R.id.playlist_tracks_count)
@@ -59,7 +56,8 @@ class PlaylistAdapter (private val stringProvider: StringProvider,
         fun bind(item: PlaylistEntity, onItemClick: ((PlaylistEntity) -> Unit)?) {
 
             playlistName.text = item.name
-            playlistTracksCount.text = "${item.tracksCount} ${WordUtils.getTrackWord(item.tracksCount, stringProvider)}"
+            playlistTracksCount.text =
+                "${item.tracksCount} ${WordUtils.getTrackWord(item.tracksCount, stringProvider)}"
 
 
             if (!item.coverImagePath.isNullOrEmpty()) {
@@ -74,6 +72,4 @@ class PlaylistAdapter (private val stringProvider: StringProvider,
         }
     }
 }
-
-
 

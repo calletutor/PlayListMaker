@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ui.text.android)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     implementation(libs.material.v161)
     implementation(libs.glide)
@@ -71,8 +72,8 @@ dependencies {
     implementation (libs.androidx.navigation.ui.ktx)
     implementation (libs.material)
 
-    implementation (libs.androidx.navigation.fragment.ktx.v277)
-    implementation (libs.androidx.navigation.ui.ktx.v277)
+
+
     implementation (libs.androidx.fragment.ktx)
 
     implementation (libs.kotlinx.coroutines.core)

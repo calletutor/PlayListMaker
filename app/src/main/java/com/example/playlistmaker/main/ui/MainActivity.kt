@@ -1,6 +1,7 @@
 package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -46,9 +47,13 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
+//            Log.d("MainActivityDebugging", "Navigated to destination: ${destination.label} with id: ${destination.id}")
+
             when (destination.id) {
-                R.id.fragmentNewPlayList -> bottomNav.visibility = View.GONE
-                else -> bottomNav.visibility = View.VISIBLE
+
+                R.id.newPlaylistFragment -> bottomNav.isVisible = false
+                R.id.playlistContentFragment -> bottomNav.isVisible = false
+                else -> bottomNav.isVisible = true
             }
         }
     }
@@ -56,5 +61,9 @@ class MainActivity : AppCompatActivity() {
     fun setBottomNavVisible(isVisible: Boolean) {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNav.isVisible = isVisible
+    }
+
+    fun hideBottomNav() {
+        bottomNav.isVisible = false
     }
 }

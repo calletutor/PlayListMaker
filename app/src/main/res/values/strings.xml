@@ -70,5 +70,36 @@
     <string name="playlist_name">playlist name</string>
     <string name="playlist_description">playlist description</string>
 
+    <string name="share_playlist">Поделиться</string>
+    <string name="edit_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="tracks_list_description">Список треков</string>
+    <string name="tracks">Треки</string>
+    <string name="name_hint">name</string>
+    <string name="track_name_hint">trackName</string>
+    <string name="artist_name_hint">artist_name</string>
+    <string name="description_hint">description</string>
+    <string name="duration_hint">duration</string>
+    <string name="tracks_number_hint">tracks number</string>
+    <string name="error_message_hint">error message</string>
+    <string name="playlist_doesnt_contain_tracks">Данный плейлист пока не содержит треков</string>
+    <string name="track_to_be_deleted">Удаление трека</string>
+    <string name="shall_the_track_be_deleted">Хотите удалить трек?</string>
+    <string name="YES">ДА</string>
+    <string name="NO">НЕТ</string>
+
+    <string name="playlist_deleting">Удаление плейлиста</string>
+    <string name="sure_to_delete_the_playlist">Вы уверены, что хотите удалить этот плейлист?</string>
+    <string name="cancel">Отмена</string>
+    <string name="proceed_deleting">Удалить</string>
+    <string name="playlist_no_tracks_to_share">В плейлисте нет треков для отправки</string>
+
+    <string name="no_name">Без названия</string>
+    <string name="no_description">Без описания</string>
+
+    <string name="playlist">Плейлист: %1$s</string>
+    <string name="description2">Описание: %1$s</string>
+    <string name="tracks_count">Количество треков: %1$s</string>
+    <string name="share_the_playlist">Поделиться плейлистом</string>
 
 </resources>

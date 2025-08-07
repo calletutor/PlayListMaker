@@ -1,6 +1,7 @@
 package com.example.playlistmaker.playlist.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -36,5 +37,10 @@ interface PlaylistTrackDao {
     @Transaction
     @Query("SELECT * FROM playlist_tracks WHERE trackId = :trackId")
     suspend fun getTrackWithPlaylists(trackId: Int): TrackWithPlaylists?
+
+
+    @Delete
+    suspend fun deleteCrossRef(crossRef: PlaylistTrackCrossRef)
+
 
 }

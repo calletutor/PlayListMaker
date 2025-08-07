@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.SelectedTracksFragmentBinding
-import com.example.playlistmaker.search.ui.TracksAdapter
+import com.example.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -17,7 +17,7 @@ class SelectedTracksFragment : Fragment() {
     private val viewModel: SelectedTracksViewModel by viewModel()
     private var _binding: SelectedTracksFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: TracksAdapter
+    private lateinit var adapter: TrackAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +32,20 @@ class SelectedTracksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = TracksAdapter(TracksAdapter.TrackClickListener { track ->
+        adapter = TrackAdapter(
 
-            val action = MediaFragmentDirections.actionMediaFragmentToPlayerFragment(track)
-            NavHostFragment.findNavController(requireParentFragment()).navigate(action)
+            TrackAdapter.TrackClickListener { track ->
+                val action = MediaFragmentDirections.actionMediaFragmentToPlayerFragment(track)
+                NavHostFragment.findNavController(requireParentFragment()).navigate(action)
+            },
 
-        })
+            longClickListener = TrackAdapter.TrackClickListener { track ->
+                val stop = 1
+                // Пока ничего, или покажи диалог, или сделай лог:
+//                Toast.makeText(requireContext(), "Long clicked: ${track.title}", Toast.LENGTH_SHORT).show()
+            }
+
+        )
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())

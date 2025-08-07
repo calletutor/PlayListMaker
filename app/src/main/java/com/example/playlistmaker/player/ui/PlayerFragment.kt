@@ -2,7 +2,6 @@ package com.example.playlistmaker.player.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -18,17 +17,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.main.ui.MainActivity
-import com.example.playlistmaker.playlists.domain.PlaylistRepository
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
-import com.example.playlistmaker.playlists.ui.PlaylistAdapter
-import com.example.playlistmaker.playlists.ui.PlaylistAdapterMode
+import com.example.playlistmaker.playlists.ui.PlaylistAdapterCompact
+//import com.example.playlistmaker.playlists.ui.PlaylistAdapter
+//import com.example.playlistmaker.playlists.ui.PlaylistAdapterMode
 import com.example.playlistmaker.search.domain.Track
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,7 +67,6 @@ class PlayerFragment : Fragment() {
 
         viewModel.preparePlayer(currentTrack)
 
-
     }
 
     private fun setupObservers() {
@@ -91,14 +84,12 @@ class PlayerFragment : Fragment() {
             binding.favoritesImage.setImageResource(iconRes)
         }
 
-
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             message?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 viewModel.clearToastMessage()
             }
         }
-
 
         viewModel.successEvent.observe(viewLifecycleOwner) { message ->
             message?.let {
@@ -148,18 +139,17 @@ class PlayerFragment : Fragment() {
                 val createButton = findViewById<Button>(R.id.create_new_playlist_button)
                 createButton?.setOnClickListener {
                     dismiss()
-                    findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlayList)
+                    findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+//                    findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlayList)
                 }
 
                 val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)!!
-                val adapter = PlaylistAdapter(stringProvider, PlaylistAdapterMode.COMPACT).apply {
+                val adapter = PlaylistAdapterCompact(stringProvider).apply {
                     setOnItemClickListener { playlist ->
 
                         currentTrack.trackId?.let { trackId ->
 
                             viewModel.addTrackToPlaylist(playlist.playlistId)
-
-
 
                         }
                         dismiss()

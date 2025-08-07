@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.databinding.PlaylistsFragmentBinding
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
+import com.example.playlistmaker.playlists.ui.PlaylistAdapterDefault
 import com.example.playlistmaker.playlists.ui.NewPlaylistViewModel
-import com.example.playlistmaker.playlists.ui.PlaylistAdapter
-import com.example.playlistmaker.playlists.ui.PlaylistAdapterMode
+//import com.example.playlistmaker.playlists.ui.PlaylistContentFragmentDirections.Companion.actionMediaFragmentToPlaylistContentFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -35,13 +36,27 @@ class PlaylistsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.createNewPlaylistButton.setOnClickListener {
-            val action = MediaFragmentDirections.actionMediaFragmentToFragmentNewPlayList()
+            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment(-1)
+//            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment(0)
+//            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment()
             NavHostFragment.findNavController(requireParentFragment()).navigate(action)
         }
 
         val stringProvider = StringProviderImpl(requireContext())
-        val adapter = PlaylistAdapter(stringProvider, PlaylistAdapterMode.DEFAULT)
 
+        val adapter = PlaylistAdapterDefault(stringProvider)
+//        val adapter = PlaylistAdapter(stringProvider, PlaylistAdapterMode.DEFAULT)
+
+        adapter.setOnItemClickListener { playlist ->
+
+            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId)
+//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(0)
+//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId)
+//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId.toString())
+//            val action = PlaylistsFragmentDirections
+//                .actionPlaylistsFragmentToPlaylistContentFragment(playlist.playlistId.toString())
+            findNavController().navigate(action)
+        }
 
         binding.playlistRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistRecyclerView.adapter = adapter

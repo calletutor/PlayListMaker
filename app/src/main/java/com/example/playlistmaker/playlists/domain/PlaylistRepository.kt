@@ -3,6 +3,7 @@ package com.example.playlistmaker.playlists.domain
 import com.example.playlistmaker.favorites.data.db.PlaylistEntity
 import com.example.playlistmaker.favorites.data.db.TrackEntity
 import com.example.playlistmaker.playlists.data.db.PlaylistTrackEntity
+import com.example.playlistmaker.search.domain.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
@@ -12,7 +13,6 @@ interface PlaylistRepository {
     suspend fun updatePlaylist(playlist: PlaylistEntity)
     suspend fun getPlaylistById(id: Long): PlaylistEntity?
     suspend fun deletePlaylist(playlist: PlaylistEntity)
-
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: Int, trackData: TrackEntity?): Boolean
 
     /////////////////////////////////////////////////
@@ -22,5 +22,15 @@ interface PlaylistRepository {
     /////////////////////////////////////////////////
 
     suspend fun getPlaylistByName(name: String): PlaylistEntity?
+
+    suspend fun getTracksByIds(ids: List<Long>): List<Track>
+
+    suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Long)
+
+//    suspend fun deletePlaylistById(playlistId: Long)
+
+//    suspend fun deletePlaylistById(playlistId: Long) {
+//        playlistDao.deletePlaylistById(playlistId)
+//    }
 
 }
