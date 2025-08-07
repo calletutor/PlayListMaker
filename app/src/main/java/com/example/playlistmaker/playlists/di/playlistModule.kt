@@ -8,24 +8,25 @@ import com.example.playlistmaker.playlists.domain.AddTrackToPlaylistUseCase
 import com.example.playlistmaker.playlists.domain.ImageStorageManager
 import com.example.playlistmaker.playlists.domain.ImageStorageManagerImpl
 import com.example.playlistmaker.playlists.domain.PlaylistRepository
-import com.example.playlistmaker.playlists.domain.ResourceStringProvider
 import com.example.playlistmaker.playlists.domain.SavePlaylistUseCase
 import com.example.playlistmaker.playlists.domain.StringProvider
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
-import org.koin.android.ext.koin.androidApplication
+import com.example.playlistmaker.playlists.ui.PlaylistContentViewModel
+
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 
-
 val playlistModule = module {
 
-    single<PlaylistRepository> { PlaylistRepositoryImpl(get(),get(),get(),get()) }
+    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get(), get()) }
 
     single { SavePlaylistUseCase(get()) }
 
     viewModel { NewPlaylistViewModel(get(), get(), get(), get()) }
+
+    viewModel { PlaylistContentViewModel(get(), get(), get()) }
 
     single { AddTrackToPlaylistUseCase(get()) }
 
@@ -49,3 +50,4 @@ val playListDatabaseModule = module {
 
 
 }
+

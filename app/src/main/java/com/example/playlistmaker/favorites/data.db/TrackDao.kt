@@ -28,4 +28,10 @@ interface TrackDao {
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE trackId = :trackId)")
     suspend fun isTrackFavorite(trackId: Int): Boolean
 
+    @Query("SELECT * FROM favorite_tracks WHERE trackId IN (:ids)")
+    suspend fun getTracksByIds(ids: List<Int>): List<TrackEntity>
+
+    @Query("SELECT trackId FROM favorite_tracks")
+    suspend fun getAllFavoriteTrackIdsOnce(): List<Int>
+
 }

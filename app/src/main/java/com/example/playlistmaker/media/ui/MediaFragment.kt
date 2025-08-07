@@ -31,6 +31,10 @@ class MediaFragment : Fragment() {
         setupEdgeToEdge()
         setupViewPagerWithTabs()
 
+
+
+
+
     }
 
     private fun setupEdgeToEdge() {

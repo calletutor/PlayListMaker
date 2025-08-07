@@ -15,15 +15,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistFragmentBinding
-import java.io.File
-import java.io.FileOutputStream
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class NewPlayListFragment : Fragment() {
+class NewPlaylistFragment : Fragment() {
 
+    private val args: NewPlaylistFragmentArgs by navArgs()
     private var _binding: NewPlaylistFragmentBinding? = null
     private val binding get() = _binding!!
     private var selectedImageUri: Uri? = null
@@ -58,37 +58,53 @@ class NewPlayListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val playlistId = args.playlistId
+
+//        if (playlistId != 0L) {
+        if (playlistId != -1L) {
+            // Режим редактирования
+            binding.buttonCreatePlaylist.text = "Сохранить"
+            // можешь дополнительно загрузить данные плейлиста по ID и отобразить
+        } else {
+            // Режим создания
+            binding.buttonCreatePlaylist.text = "Создать"
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (hasUnsavedChanges()) {
-                        showExitConfirmationDialog()
-                    } else {
+
+                    if (playlistId != -1L) {
+                        //редактирование существующего плейлиста
+                        val stop = 1
                         findNavController().popBackStack()
+                    }else{
+                        //новый плейлист
+                        if (hasUnsavedChanges()) {
+                            showExitConfirmationDialog()
+                        } else {
+                            findNavController().popBackStack()
+                        }
                     }
                 }
             }
         )
 
         binding.toolbar.setNavigationOnClickListener {
-            if (hasUnsavedChanges()) {
-                showExitConfirmationDialog()
-            } else {
+
+            if (playlistId != -1L) {
+                //редактирование существующего плейлиста
+                val stop = 1
                 findNavController().popBackStack()
-            }
-        }
-
-
-
-        binding.toolbar.setNavigationOnClickListener {
-
-            if (hasUnsavedChanges()) {
-                showExitConfirmationDialog()
             } else {
-                findNavController().popBackStack()
+                //новый плейлист
+                if (hasUnsavedChanges()) {
+                    showExitConfirmationDialog()
+                } else {
+                    findNavController().popBackStack()
+                }
             }
-
         }
 
         binding.newPlaylistName.addTextChangedListener {
@@ -107,7 +123,9 @@ class NewPlayListFragment : Fragment() {
             viewModel.savePlaylist(
                 name = name,
                 description = description,
-                imageUri = selectedImageUri
+                imageUri = selectedImageUri,
+                id = args.playlistId.takeIf { it != -1L }
+//                id = args.playlistId.takeIf { it != 0L }
             )
 
         }
@@ -131,6 +149,22 @@ class NewPlayListFragment : Fragment() {
                 viewModel.onErrorHandled()
             }
         }
+
+        if (args.playlistId != -1L) {
+            viewModel.loadPlaylist(args.playlistId)
+        }
+
+        viewModel.loadedPlaylist.observe(viewLifecycleOwner) { playlist ->
+            playlist?.let {
+                binding.newPlaylistName.setText(it.name)
+                binding.newPlaylistDescription.setText(it.description)
+                it.coverImagePath?.let { path ->
+                    selectedImageUri = Uri.parse(path)
+                    binding.playlistImage.setImageURI(selectedImageUri)
+                } ?: binding.playlistImage.setImageResource(R.drawable.place_holder2_w_bg)
+            }
+        }
+
     }
 
     private fun openImagePicker() {
@@ -154,7 +188,6 @@ class NewPlayListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun hasUnsavedChanges(): Boolean {
 
