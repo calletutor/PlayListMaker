@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingVertical="20dp"
-            android:text="TextView"
+            android:text="@string/error_message_hint"
             android:textSize="@dimen/text_size_20"
             android:visibility="gone" />
 

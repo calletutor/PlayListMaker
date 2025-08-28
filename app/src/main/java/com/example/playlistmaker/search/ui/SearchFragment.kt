@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.domain.Track
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlinx.coroutines.flow.first
 
 class SearchFragment : Fragment() {
 
@@ -38,7 +37,7 @@ class SearchFragment : Fragment() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    private lateinit var tracksAdapter: TracksAdapter
+    private lateinit var tracksAdapter: TrackAdapter
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -71,12 +70,18 @@ class SearchFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        tracksAdapter = TracksAdapter { track ->
-            if (clickDebounce()) {
-                viewModel.saveTrackToHistory(track)
-                openPlayerScreen(track)
+        tracksAdapter = TrackAdapter(
+            clickListener = TrackAdapter.TrackClickListener { track ->
+                if (clickDebounce()) {
+                    viewModel.saveTrackToHistory(track)
+                    openPlayerScreen(track)
+                }
+            },
+            longClickListener = TrackAdapter.TrackClickListener { track ->
+                Log.d("TrackLongClick", "Long clicked on: ${track.trackName}")
             }
-        }
+        )
+
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = tracksAdapter
     }
@@ -91,7 +96,6 @@ class SearchFragment : Fragment() {
                         viewModel.loadSearchHistory()
                     }
                 }
-
 
                 showKeyboard(binding.searchInputEditText)
             }

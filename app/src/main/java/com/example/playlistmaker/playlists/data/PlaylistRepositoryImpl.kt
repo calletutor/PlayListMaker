@@ -10,6 +10,8 @@ import com.example.playlistmaker.playlists.domain.PlaylistRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import com.example.playlistmaker.playlists.data.db.PlaylistTrackCrossRef
+import com.example.playlistmaker.search.domain.Track
+import com.example.playlistmaker.toTrack
 
 
 class PlaylistRepositoryImpl(
@@ -79,5 +81,30 @@ class PlaylistRepositoryImpl(
         return wasTrackAdded
     }
 
+    override suspend fun getTracksByIds(ids: List<Long>): List<Track> {
+        return trackDao.getTracksByIds(ids.map { it.toInt() }).map { it.toTrack() }
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Long) {
+
+
+        // Преобразуем trackId в Int, если требуется, чтобы соответствовать типу данных в crossRef.
+        val crossRef = PlaylistTrackCrossRef(
+            playlistId = playlistId,
+            trackId = trackId.toInt()
+        )
+
+        // Удаляем связь между плейлистом и треком.
+        playlistTrackDao.deleteCrossRef(crossRef)
+
+        // После удаления связи получаем обновленные данные плейлиста вместе с его треками.
+        val playlistWithTracks = playlistTrackDao.getPlaylistWithTracks(playlistId)
+        val updatedTrackCount = playlistWithTracks?.tracks?.size ?: 0
+
+        // Обновляем счетчик треков в плейлисте, создавая копию сущности с новым значением.
+        playlistWithTracks?.playlist?.copy(tracksCount = updatedTrackCount)?.let { updatedPlaylist ->
+            playlistDao.updatePlaylist(updatedPlaylist)
+        }
+    }
 
 }

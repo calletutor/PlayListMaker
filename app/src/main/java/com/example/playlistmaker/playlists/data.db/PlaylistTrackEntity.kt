@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class PlaylistTrackEntity(
     @PrimaryKey
     val trackId: Int,
-    var isFavorite: Boolean = false,
+    var isFavorite: Boolean,
+//    var isFavorite: Boolean = false,
     val previewUrl: String?,
     val trackName: String,
     val artistName: String,
@@ -17,5 +18,6 @@ data class PlaylistTrackEntity(
     val releaseDate: String,
     val country: String,
     val primaryGenreName: String,
-    val addedAt: Long
+    val addedAt: Long,
+
 )
