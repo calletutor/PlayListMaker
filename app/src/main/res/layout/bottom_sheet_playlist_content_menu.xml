@@ -27,6 +27,5 @@
         android:layout_height="wrap_content"
         android:text="@string/delete_playlist"
         android:padding="12dp"
-        android:textColor="@color/black"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

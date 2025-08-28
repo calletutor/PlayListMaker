@@ -6,15 +6,14 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.BottomSheetLayoutBinding
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.main.ui.MainActivity
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
@@ -26,7 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class PlayerFragment : Fragment() {
 
@@ -73,7 +71,8 @@ class PlayerFragment : Fragment() {
 
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            binding.playImage.setImageResource(state.buttonResId)
+            binding.playbackButton.setPlaying(state.isPlaying)
+//            binding.playImage.setImageResource(state.buttonResId)
             binding.playingTime.text = state.playTime
 
             val iconRes = if (state.isFavorite) {
@@ -107,12 +106,15 @@ class PlayerFragment : Fragment() {
 
 
     }
-
     private fun setupClickListeners() {
 
-        binding.playImage.setOnClickListener {
+        binding.playbackButton.setOnPlaybackToggleListener {
             viewModel.playbackControl()
         }
+
+//        binding.playImage.setOnClickListener {
+//            viewModel.playbackControl()
+//        }
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -122,50 +124,39 @@ class PlayerFragment : Fragment() {
             viewModel.toggleFavorite(currentTrack)
         }
 
-
         binding.addToPlaylistButton.setOnClickListener {
-
             viewModel.loadPlaylists()
 
-            val dialog = BottomSheetDialog(requireContext()).apply {
-                setContentView(R.layout.bottom_sheet_layout)
+            // Создаём BottomSheet с кастомным стилем, чтобы фон был сразу задан
+            val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialog)
 
-                setOnShowListener { dialogInterface ->
-                    val bottomSheet = (dialogInterface as BottomSheetDialog)
-                        .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                    bottomSheet?.setBackgroundResource(R.drawable.bg_bottom_sheet)
-                }
+            // Используем ViewBinding для контента BottomSheet
+            val bottomSheetBinding = BottomSheetLayoutBinding.inflate(layoutInflater)
+            dialog.setContentView(bottomSheetBinding.root)
 
-                val createButton = findViewById<Button>(R.id.create_new_playlist_button)
-                createButton?.setOnClickListener {
-                    dismiss()
-                    findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
-//                    findNavController().navigate(R.id.action_playerFragment_to_fragmentNewPlayList)
-                }
+            bottomSheetBinding.createNewPlaylistButton.setOnClickListener {
+                dialog.dismiss()
+                findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+            }
 
-                val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)!!
-                val adapter = PlaylistAdapterCompact(stringProvider).apply {
-                    setOnItemClickListener { playlist ->
-
-                        currentTrack.trackId?.let { trackId ->
-
-                            viewModel.addTrackToPlaylist(playlist.playlistId)
-
-                        }
-                        dismiss()
+            val adapter = PlaylistAdapterCompact(stringProvider).apply {
+                setOnItemClickListener { playlist ->
+                    currentTrack.trackId?.let {
+                        viewModel.addTrackToPlaylist(playlist.playlistId)
                     }
-                }
-                recyclerView.adapter = adapter
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-                viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
-                    adapter.submitList(playlists)
+                    dialog.dismiss()
                 }
             }
+
+            bottomSheetBinding.recyclerView.adapter = adapter
+            bottomSheetBinding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
+                adapter.submitList(playlists)
+            }
+
             dialog.show()
         }
-
-
     }
 
     private fun bindTrackInfoToUI(track: Track) {

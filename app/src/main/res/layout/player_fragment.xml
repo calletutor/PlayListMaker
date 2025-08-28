@@ -68,7 +68,7 @@
         android:hint="@string/artist_name_hint"
         android:textColor="@color/dual_color"
         android:textSize="@dimen/text_size_14"
-        app:layout_constraintBottom_toTopOf="@id/playImage"
+        app:layout_constraintBottom_toTopOf="@id/playbackButton"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         />
@@ -81,22 +81,20 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/favorites_button_unselected"
-        app:layout_constraintBottom_toBottomOf="@id/playImage"
+        app:layout_constraintBottom_toBottomOf="@id/playbackButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playImage" />
+        app:layout_constraintTop_toTopOf="@id/playbackButton" />
 
-    <ImageView
-        android:id="@+id/playImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.example.playlistmaker.player.ui.PlaybackButtonView
+        android:id="@+id/playbackButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="4dp"
-        android:clickable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/play_button"
+        app:playIcon="@drawable/play_button"
+        app:pauseIcon="@drawable/pause_button_light"
         app:layout_constraintBottom_toTopOf="@id/playing_time"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        />
+        app:layout_constraintEnd_toEndOf="@id/rightBorder" />
 
     <ImageView
         android:id="@+id/add_to_playlist_button"
@@ -106,9 +104,9 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/add_to_playlist_button"
-        app:layout_constraintBottom_toBottomOf="@id/playImage"
+        app:layout_constraintBottom_toBottomOf="@id/playbackButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playImage" />
+        app:layout_constraintTop_toTopOf="@id/playbackButton" />
 
     <TextView
         android:id="@+id/playing_time"

@@ -2,22 +2,17 @@ package com.example.playlistmaker.playlists.ui
 
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.PlaylistViewForBottomSheetBinding
 import com.example.playlistmaker.favorites.data.db.PlaylistEntity
 import com.example.playlistmaker.playlists.domain.StringProvider
 import com.example.playlistmaker.playlists.utils.WordUtils
 
-
 class PlaylistAdapterCompact(
     private val stringProvider: StringProvider
-) :
-
-    RecyclerView.Adapter<PlaylistAdapterCompact.PlaylistViewHolder>() {
+) : RecyclerView.Adapter<PlaylistAdapterCompact.PlaylistViewHolder>() {
 
     private var playlists: List<PlaylistEntity> = emptyList()
     private var onItemClickListener: ((PlaylistEntity) -> Unit)? = null
@@ -28,17 +23,13 @@ class PlaylistAdapterCompact(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-//        val layoutId = when (mode) {
-//            PlaylistAdapterMode.DEFAULT -> R.layout.playlist_view_for_playlists_fragment
-//            PlaylistAdapterMode.COMPACT -> R.layout.playlist_view_for_bottom_sheet
-//        }
-
-        val view = inflater.inflate(R.layout.playlist_view_for_bottom_sheet, parent, false)
-//        val view = inflater.inflate(layoutId, parent, false)
-        return PlaylistViewHolder(view, stringProvider)
+        val binding = PlaylistViewForBottomSheetBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return PlaylistViewHolder(binding, stringProvider)
     }
-
 
     override fun getItemCount(): Int = playlists.size
 
@@ -51,31 +42,24 @@ class PlaylistAdapterCompact(
     }
 
     class PlaylistViewHolder(
-        itemView: View,
+        private val binding: PlaylistViewForBottomSheetBinding,
         private val stringProvider: StringProvider
-    ) : RecyclerView.ViewHolder(itemView) {
-        private val playlistName: TextView = itemView.findViewById(R.id.playlist_name)
-        private val playlistTracksCount: TextView =
-            itemView.findViewById(R.id.playlist_tracks_count)
-        private val cover: ImageView = itemView.findViewById(R.id.playlist_image)
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PlaylistEntity, onItemClick: ((PlaylistEntity) -> Unit)?) {
-
-            playlistName.text = item.name
-            playlistTracksCount.text =
+            binding.playlistName.text = item.name
+            binding.playlistTracksCount.text =
                 "${item.tracksCount} ${WordUtils.getTrackWord(item.tracksCount, stringProvider)}"
 
-
             if (!item.coverImagePath.isNullOrEmpty()) {
-                cover.setImageURI(Uri.parse(item.coverImagePath))
+                binding.playlistImage.setImageURI(Uri.parse(item.coverImagePath))
             } else {
-                cover.setImageResource(R.drawable.place_holder2_w_bg)
+                binding.playlistImage.setImageResource(R.drawable.place_holder2_w_bg)
             }
 
-            itemView.setOnClickListener {
+            binding.root.setOnClickListener {
                 onItemClick?.invoke(item)
             }
         }
     }
 }
-
