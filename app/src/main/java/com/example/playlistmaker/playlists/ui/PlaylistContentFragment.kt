@@ -18,6 +18,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.databinding.BottomSheetPlaylistContentMenuBinding
+import com.example.playlistmaker.databinding.BottomSheetPlaylistContentTrackListBinding
 import com.example.playlistmaker.databinding.PlaylistContentFragmentBinding
 import com.example.playlistmaker.main.ui.MainActivity
 import com.example.playlistmaker.search.domain.Track
@@ -156,26 +158,26 @@ class PlaylistContentFragment : Fragment() {
     }
 
     private fun showBottomSheetMenu() {
-        val bottomSheetView =
-            layoutInflater.inflate(R.layout.bottom_sheet_playlist_content_menu, null)
+
+        val bottomSheetBinding = BottomSheetPlaylistContentMenuBinding.inflate(layoutInflater)
+
         val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(bottomSheetView)
 
-        bottomSheetView.findViewById<TextView>(R.id.btnShare).setOnClickListener {
+        dialog.setContentView(bottomSheetBinding.root)
+
+        bottomSheetBinding.btnShare.setOnClickListener {
             dialog.dismiss()
-
             share()
-
         }
 
-        bottomSheetView.findViewById<TextView>(R.id.btnEdit).setOnClickListener {
+        bottomSheetBinding.btnEdit.setOnClickListener {
             dialog.dismiss()
             val action = PlaylistContentFragmentDirections
                 .actionPlaylistContentFragmentToNewPlaylistFragment(args.playlistId)
             findNavController().navigate(action)
         }
 
-        bottomSheetView.findViewById<TextView>(R.id.btnDelete).setOnClickListener {
+        bottomSheetBinding.btnDelete.setOnClickListener {
 
             dialog.dismiss()
 
@@ -202,31 +204,6 @@ class PlaylistContentFragment : Fragment() {
                 .show()
 
         }
-
-        dialog.show()
-    }
-
-
-    private fun showTracksBottomSheet(tracks: List<Track>, playlistId: Long) {
-        val bottomSheetView =
-            layoutInflater.inflate(R.layout.bottom_sheet_playlist_content_track_list, null)
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(bottomSheetView)
-
-        val recyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.tracksRecyclerView)
-        val adapter = TrackAdapter(
-            clickListener = TrackAdapter.TrackClickListener { track ->
-                openPlayerScreen(track)
-                dialog.dismiss()
-            },
-            longClickListener = TrackAdapter.TrackClickListener { track ->
-                showRemoveTrackDialog(track, playlistId)
-            }
-        )
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter.tracks.addAll(tracks)
-        adapter.notifyDataSetChanged()
 
         dialog.show()
     }

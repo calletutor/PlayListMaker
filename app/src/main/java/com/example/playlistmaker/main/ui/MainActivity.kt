@@ -1,8 +1,6 @@
 package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,11 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.MainActivityBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var binding: MainActivityBinding
 
@@ -25,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        bottomNav = findViewById(R.id.bottomNavigationView)
 
         enableEdgeToEdge()
 
@@ -37,33 +30,24 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-
         val navController = navHostFragment.navController
 
-        findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.setupWithNavController(
-            navController
-        )
+        binding.bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-//            Log.d("MainActivityDebugging", "Navigated to destination: ${destination.label} with id: ${destination.id}")
-
-            when (destination.id) {
-
-                R.id.newPlaylistFragment -> bottomNav.isVisible = false
-                R.id.playlistContentFragment -> bottomNav.isVisible = false
-                else -> bottomNav.isVisible = true
+            binding.bottomNavigationView.isVisible = when (destination.id) {
+                R.id.newPlaylistFragment,
+                R.id.playlistContentFragment -> false
+                else -> true
             }
         }
     }
 
     fun setBottomNavVisible(isVisible: Boolean) {
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNav.isVisible = isVisible
+        binding.bottomNavigationView.isVisible = isVisible
     }
 
     fun hideBottomNav() {
-        bottomNav.isVisible = false
+        binding.bottomNavigationView.isVisible = false
     }
 }
