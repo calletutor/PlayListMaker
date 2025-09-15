@@ -1,21 +1,30 @@
 package com.example.playlistmaker.player.ui
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.example.playlistmaker.Manifest
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.BottomSheetLayoutBinding
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.main.ui.MainActivity
+import com.example.playlistmaker.player.domain.MusicService
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
 import com.example.playlistmaker.playlists.ui.PlaylistAdapterCompact
 //import com.example.playlistmaker.playlists.ui.PlaylistAdapter
@@ -25,6 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class PlayerFragment : Fragment() {
 
@@ -38,11 +48,28 @@ class PlayerFragment : Fragment() {
         PlayerFragmentArgs.fromBundle(requireArguments()).track
     }
 
+    private var isBound = false
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicServiceBinder
+            val controller = binder.getController() // <- теперь только интерфейс
+            isBound = true
+            viewModel.bindService(controller)
+            viewModel.preparePlayer(currentTrack)     // <- этот вызов остаётся
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false
+            viewModel.unbindService()
+        }
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View {
         _binding = PlayerFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -57,22 +84,33 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as? MainActivity)?.setBottomNavVisible(false)
-
         bindTrackInfoToUI(currentTrack)
-
         setupObservers()
         setupClickListeners()
 
-        viewModel.preparePlayer(currentTrack)
+        val intent = Intent(requireContext(), MusicService::class.java)
+        requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
+
+//        viewModel.preparePlayer(currentTrack)
 
     }
 
-    private fun setupObservers() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (isBound) {
+            viewModel.releasePlayer()
+            requireContext().unbindService(connection)
+            isBound = false
+        }
+        (activity as? MainActivity)?.setBottomNavVisible(true)
+        _binding = null
+    }
 
+
+    private fun setupObservers() {
 
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             binding.playbackButton.setPlaying(state.isPlaying)
-//            binding.playImage.setImageResource(state.buttonResId)
             binding.playingTime.text = state.playTime
 
             val iconRes = if (state.isFavorite) {
@@ -103,18 +141,13 @@ class PlayerFragment : Fragment() {
                 viewModel.clearErrorMessage()
             }
         }
-
-
     }
+
     private fun setupClickListeners() {
 
         binding.playbackButton.setOnPlaybackToggleListener {
             viewModel.playbackControl()
         }
-
-//        binding.playImage.setOnClickListener {
-//            viewModel.playbackControl()
-//        }
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -185,12 +218,6 @@ class PlayerFragment : Fragment() {
             .into(binding.imageView)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (activity as? MainActivity)?.setBottomNavVisible(true)
-        _binding = null
-    }
-
     private fun dpToPx(dp: Float, context: Context): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -198,4 +225,50 @@ class PlayerFragment : Fragment() {
             context.resources.displayMetrics
         ).toInt()
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        checkAndRequestNotificationPermission()
+        viewModel.onUIStart()  // скрываем notification
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        viewModel.onUIStop()   // показываем notification
+
+    }
+
+
+
+    private fun checkAndRequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = "android.permission.POST_NOTIFICATIONS"
+            if (ContextCompat.checkSelfPermission(requireContext(), permission)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(arrayOf(permission), 1001)
+            }
+        }
+    }
+
+
+
+//    private fun checkAndRequestNotificationPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (ContextCompat.checkSelfPermission(
+//                    requireContext(),
+//                    Manifest.permission.POST_NOTIFICATIONS
+//                ) != PackageManager.PERMISSION_GRANTED
+//            ) {
+//                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1001)
+//            }
+//        }
+//    }
+
+
+
+
 }
