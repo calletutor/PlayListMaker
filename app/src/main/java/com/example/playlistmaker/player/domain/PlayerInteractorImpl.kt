@@ -12,9 +12,6 @@ class PlayerInteractorImpl(
         return playerRepository.getCurrentPosition()
     }
 
-
-
-
     override fun preparePlayer(
         url: String,
         onPrepared: () -> Unit,

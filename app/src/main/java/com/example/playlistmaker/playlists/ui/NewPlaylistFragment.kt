@@ -38,8 +38,6 @@ class NewPlaylistFragment : Fragment() {
                 selectedImageUri = it
                 binding.playlistImage.setImageURI(it)
             }
-
-
         }
     }
 
