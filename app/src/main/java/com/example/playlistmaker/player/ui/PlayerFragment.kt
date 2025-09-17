@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,13 +14,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-//import com.example.playlistmaker.Manifest
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.BottomSheetLayoutBinding
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
@@ -27,14 +28,11 @@ import com.example.playlistmaker.main.ui.MainActivity
 import com.example.playlistmaker.player.domain.MusicService
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
 import com.example.playlistmaker.playlists.ui.PlaylistAdapterCompact
-//import com.example.playlistmaker.playlists.ui.PlaylistAdapter
-//import com.example.playlistmaker.playlists.ui.PlaylistAdapterMode
 import com.example.playlistmaker.search.domain.Track
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class PlayerFragment : Fragment() {
 
@@ -53,10 +51,10 @@ class PlayerFragment : Fragment() {
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicServiceBinder
-            val controller = binder.getController() // <- теперь только интерфейс
+            val controller = binder.getController()
             isBound = true
             viewModel.bindService(controller)
-            viewModel.preparePlayer(currentTrack)     // <- этот вызов остаётся
+            viewModel.preparePlayer(currentTrack)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -64,7 +62,6 @@ class PlayerFragment : Fragment() {
             viewModel.unbindService()
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,8 +88,39 @@ class PlayerFragment : Fragment() {
         val intent = Intent(requireContext(), MusicService::class.java)
         requireContext().bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
-//        viewModel.preparePlayer(currentTrack)
+        askNotificationPermission()
 
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                //разрешение уже есть
+                //do nothing
+            }
+        }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = Manifest.permission.POST_NOTIFICATIONS
+
+            when {
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    //разрешение уде есть
+                    //do nothing
+                }
+
+                else -> {
+                    //первый запрос разрешения
+                    requestPermissionLauncher.launch(permission)
+                }
+            }
+        } else {
+            //для данной версии андроид разрешение не требуется
+        }
     }
 
     override fun onDestroyView() {
@@ -105,7 +133,6 @@ class PlayerFragment : Fragment() {
         (activity as? MainActivity)?.setBottomNavVisible(true)
         _binding = null
     }
-
 
     private fun setupObservers() {
 
@@ -229,7 +256,7 @@ class PlayerFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        checkAndRequestNotificationPermission()
+//        checkAndRequestNotificationPermission()
         viewModel.onUIStart()  // скрываем notification
 
     }
@@ -240,35 +267,5 @@ class PlayerFragment : Fragment() {
         viewModel.onUIStop()   // показываем notification
 
     }
-
-
-
-    private fun checkAndRequestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = "android.permission.POST_NOTIFICATIONS"
-            if (ContextCompat.checkSelfPermission(requireContext(), permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(arrayOf(permission), 1001)
-            }
-        }
-    }
-
-
-
-//    private fun checkAndRequestNotificationPermission() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            if (ContextCompat.checkSelfPermission(
-//                    requireContext(),
-//                    Manifest.permission.POST_NOTIFICATIONS
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1001)
-//            }
-//        }
-//    }
-
-
-
 
 }

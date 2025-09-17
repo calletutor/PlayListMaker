@@ -57,7 +57,7 @@ class MusicService : Service(), MusicServiceController {
         onCompletion: (() -> Unit)?,
         track: Track
     ) {
-        setCurrentTrack(track) // сохраняем трек
+        setCurrentTrack(track)
 
         playerInteractor.preparePlayer(
             url,
