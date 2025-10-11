@@ -37,6 +37,7 @@ import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.compose.get
 import org.koin.androidx.viewmodel.dsl.viewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -97,11 +98,10 @@ object DataModule {
 
         viewModel {
             PlayerViewModel(
-                get(),
-                get<Resources>().getString(R.string.default_play_time),
-                get(),
-                get(),
-                get()
+                defaultPlayTime = get<Resources>().getString(R.string.default_play_time),
+                favoritesInteractor = get(),
+                addTrackToPlaylistUseCase = get(),
+                playlistRepository = get()
             )
         }
 
