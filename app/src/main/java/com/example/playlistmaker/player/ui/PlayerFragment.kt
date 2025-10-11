@@ -95,7 +95,6 @@ class PlayerFragment : Fragment() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
-                //разрешение уже есть
                 //do nothing
             }
         }
@@ -109,12 +108,10 @@ class PlayerFragment : Fragment() {
                     requireContext(),
                     permission
                 ) == PackageManager.PERMISSION_GRANTED -> {
-                    //разрешение уде есть
                     //do nothing
                 }
 
                 else -> {
-                    //первый запрос разрешения
                     requestPermissionLauncher.launch(permission)
                 }
             }
@@ -187,16 +184,18 @@ class PlayerFragment : Fragment() {
         binding.addToPlaylistButton.setOnClickListener {
             viewModel.loadPlaylists()
 
-            // Создаём BottomSheet с кастомным стилем, чтобы фон был сразу задан
             val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialog)
 
-            // Используем ViewBinding для контента BottomSheet
             val bottomSheetBinding = BottomSheetLayoutBinding.inflate(layoutInflater)
             dialog.setContentView(bottomSheetBinding.root)
 
             bottomSheetBinding.createNewPlaylistButton.setOnClickListener {
                 dialog.dismiss()
-                findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+
+                val action = PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment(-1L)
+                findNavController().navigate(action)
+
+
             }
 
             val adapter = PlaylistAdapterCompact(stringProvider).apply {
@@ -256,15 +255,14 @@ class PlayerFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-//        checkAndRequestNotificationPermission()
-        viewModel.onUIStart()  // скрываем notification
+        viewModel.onUIStart()
 
     }
 
     override fun onStop() {
         super.onStop()
 
-        viewModel.onUIStop()   // показываем notification
+        viewModel.onUIStop()
 
     }
 

@@ -14,7 +14,6 @@ interface MusicServiceController {
     fun releasePlayer()
     fun getCurrentPosition(): Int
 
-    // Новые методы для foreground-уведомления
     fun showNotification()
     fun hideNotification()
 

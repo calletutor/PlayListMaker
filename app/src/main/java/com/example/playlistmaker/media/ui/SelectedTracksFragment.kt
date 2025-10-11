@@ -40,9 +40,7 @@ class SelectedTracksFragment : Fragment() {
             },
 
             longClickListener = TrackAdapter.TrackClickListener { track ->
-                val stop = 1
-                // Пока ничего, или покажи диалог, или сделай лог:
-//                Toast.makeText(requireContext(), "Long clicked: ${track.title}", Toast.LENGTH_SHORT).show()
+                //do nothing
             }
 
         )

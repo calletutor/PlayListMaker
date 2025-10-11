@@ -31,16 +31,14 @@ fun TrackEntity.toTrack(): Track = Track(
 
 fun PlaylistTrackEntity.toTrack(): Track = Track(
     trackId = this.trackId,
-    isFavorite = this.isFavorite,          // или взять из другой сущности, если есть
-//    isFavorite = false,          // или взять из другой сущности, если есть
-    previewUrl = this.previewUrl,           // если в PlaylistTrackEntity нет — можно null
-//    previewUrl = null,           // если в PlaylistTrackEntity нет — можно null
+    isFavorite = this.isFavorite,
+    previewUrl = this.previewUrl,
     trackName = this.trackName,
     artistName = this.artistName,
     trackTimeMillis = this.trackTimeMillis,
     artworkUrl100 = this.artworkUrl100,
-    collectionName = "",       // если есть — подставить, иначе null
-    releaseDate = "",          // если есть — подставить, иначе null
-    country = "",              // если есть — подставить, иначе null
-    primaryGenreName = ""      // если есть — подставить, иначе null
+    collectionName = "",
+    releaseDate = "",
+    country = "",
+    primaryGenreName = ""
 )

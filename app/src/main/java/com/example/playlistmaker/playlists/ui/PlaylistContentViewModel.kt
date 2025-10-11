@@ -40,7 +40,6 @@ class PlaylistContentViewModel(
             _playlist.postValue(playlist)
 
             playlist?.let {
-                // Получаем список PlaylistTrackEntity для этого плейлиста
                 val playlistTracks = repository.getTracksForPlaylist(it)
                     .sortedByDescending { track -> track.addedAt }
 
@@ -68,7 +67,7 @@ class PlaylistContentViewModel(
     fun removeTrackFromPlaylist(track: Track, playlistId: Long) {
         viewModelScope.launch {
             repository.removeTrackFromPlaylist(track.trackId.toString(), playlistId)
-            loadPlaylist(playlistId) // Обновим список после удаления
+            loadPlaylist(playlistId)
         }
     }
 

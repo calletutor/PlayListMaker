@@ -2,6 +2,19 @@
 
     android:text=""
 
+    <string name="clear_icon">Clear Icon</string>
+    <string name="search_icon">Search Icon</string>
+
+    <string name="mm_ss">mm:ss</string>
+
+    <string name="separator">Separator</string>
+    <string name="action_icon">Action icon</string>
+
+    <string name="selected">Избранное</string>
+    <string name="playlists">Плейлисты</string>
+
+    <string name="album_cover">Album cover</string>
+
     <string name="media_library_is_empty">Ваша медиатека пуста</string>
 
     <string name="no_playlist_created">Вы не создали \n ни одного плейлиста</string>
@@ -45,9 +58,9 @@
     <string name="genre_hint">genre</string>
     <string name="country_hint">country</string>
 
-    <string name="nothing_found">Ничего не найдено.</string>
-    <string name="connection_failed">Проблема с сетью.</string>"
-    <string name="unknown_error">Неизвестная ошибка.</string>">
+    <string name="nothing_found">Ничего не найдено</string>
+    <string name="connection_failed">Проблема с сетью</string>"
+    <string name="unknown_error">Неизвестная ошибка</string>">
     <string name="default_play_time">00:00</string>
 
     <string name="error_playlist_exists">Плейлист с именем "%1$s" уже существует</string>

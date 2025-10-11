@@ -12,7 +12,6 @@ import com.example.playlistmaker.databinding.PlaylistsFragmentBinding
 import com.example.playlistmaker.playlists.domain.StringProviderImpl
 import com.example.playlistmaker.playlists.ui.PlaylistAdapterDefault
 import com.example.playlistmaker.playlists.ui.NewPlaylistViewModel
-//import com.example.playlistmaker.playlists.ui.PlaylistContentFragmentDirections.Companion.actionMediaFragmentToPlaylistContentFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -37,24 +36,16 @@ class PlaylistsFragment : Fragment() {
 
         binding.createNewPlaylistButton.setOnClickListener {
             val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment(-1)
-//            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment(0)
-//            val action = MediaFragmentDirections.actionMediaFragmentToNewPlaylistFragment()
             NavHostFragment.findNavController(requireParentFragment()).navigate(action)
         }
 
         val stringProvider = StringProviderImpl(requireContext())
 
         val adapter = PlaylistAdapterDefault(stringProvider)
-//        val adapter = PlaylistAdapter(stringProvider, PlaylistAdapterMode.DEFAULT)
 
         adapter.setOnItemClickListener { playlist ->
 
             val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId)
-//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(0)
-//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId)
-//            val action = MediaFragmentDirections.actionMediaFragmentToPlaylistContentFragment(playlist.playlistId.toString())
-//            val action = PlaylistsFragmentDirections
-//                .actionPlaylistsFragmentToPlaylistContentFragment(playlist.playlistId.toString())
             findNavController().navigate(action)
         }
 

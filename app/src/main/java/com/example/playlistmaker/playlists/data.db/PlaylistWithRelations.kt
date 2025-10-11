@@ -5,7 +5,6 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.example.playlistmaker.favorites.data.db.PlaylistEntity
 
-// Плейлист с треками
 data class PlaylistWithTracks(
     @Embedded val playlist: PlaylistEntity,
     @Relation(
@@ -16,7 +15,6 @@ data class PlaylistWithTracks(
     val tracks: List<PlaylistTrackEntity>
 )
 
-// Трек с плейлистами
 data class TrackWithPlaylists(
     @Embedded val track: PlaylistTrackEntity,
     @Relation(

@@ -75,7 +75,7 @@ class NewPlaylistViewModel(
 
             val imagePath = imageUri?.let {
                 imageStorageManager.copyImageToInternalStorage(it)
-            } ?: currentImagePath // если пользователь не выбрал новую картинку — используем старую
+            } ?: currentImagePath
 
             val finalTrackIds = trackIds ?: currentTrackIds
 
@@ -98,79 +98,19 @@ class NewPlaylistViewModel(
         }
     }
 
-
-
-
-
-
-
-
-//
-//
-//
-//    fun savePlaylist(
-//        name: String,
-//        description: String?,
-//        imageUri: Uri? = null,
-//        trackIds: List<Int> = emptyList()
-//    ) {
-//        viewModelScope.launch {
-//            val existing = playlistRepository.getPlaylistByName(name)
-//            if (existing != null) {
-//                _errorEvent.postValue(
-//                    stringProvider.getString(
-//                        R.string.error_playlist_exists,
-//                        name
-//                    )
-//                )
-//                return@launch
-//            }
-//
-//            val imagePath = imageUri?.let { imageStorageManager.copyImageToInternalStorage(it) }
-//
-//            val playlist = PlaylistEntity(
-//                name = name,
-//                description = description,
-//                coverImagePath = imagePath,
-//                tracksCount = trackIds.size,
-//                createdAt = System.currentTimeMillis()
-//            )
-//            savePlaylistUseCase(playlist)
-//
-//            _successEvent.postValue(
-//                stringProvider.getString(
-//                    R.string.playlist_created_successfully,
-//                    name
-//                )
-//            )
-//        }
-//    }
-//
-//
-//
-//
-//
-//
-
-
-
-
     fun loadPlaylist(id: Long) {
         viewModelScope.launch {
             val playlist = playlistRepository.getPlaylistById(id)
             _loadedPlaylist.postValue(playlist)
             playlist?.let {
                 playlistName.postValue(it.name)
-                currentImagePath = it.coverImagePath // сохраняем текущую обложку
+                currentImagePath = it.coverImagePath
 
-                // Получаем текущие треки этого плейлиста
                 val tracks = playlistRepository.getTracksForPlaylist(it)
                 currentTrackIds = tracks.mapNotNull { trackEntity ->
                     trackEntity.trackId
-//                    trackEntity.trackId?.toIntOrNull() // зависит от типа trackId
                 }
             }
         }
     }
-
 }

@@ -48,7 +48,6 @@ class PlaybackButtonView @JvmOverloads constructor(
         }
     }
 
-    // Приватная функция для конвертации вектора в Bitmap
     private fun getBitmapFromVector(resId: Int): Bitmap? {
         val drawable = AppCompatResources.getDrawable(context, resId) ?: return null
         val bitmap = Bitmap.createBitmap(
@@ -64,20 +63,19 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        rect.set(0f, 0f, w.toFloat(), h.toFloat()) // вместо пересоздания rect
+        rect.set(0f, 0f, w.toFloat(), h.toFloat())
     }
 
     override fun onDraw(canvas: Canvas) {
         val bitmap = if (isPlaying) pauseBitmap else playBitmap
         bitmap?.let {
-            canvas.drawBitmap(it, null, rect, null) // <-- растягиваем в прямоугольник rect
+            canvas.drawBitmap(it, null, rect, null)
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // сообщаем системе: будем отслеживать дальнейшие события
                 return true
             }
             MotionEvent.ACTION_UP -> {
@@ -89,7 +87,6 @@ class PlaybackButtonView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    /** Меняем состояние кнопки */
     fun toggle() {
         isPlaying = !isPlaying
         invalidate()
@@ -101,7 +98,6 @@ class PlaybackButtonView @JvmOverloads constructor(
         invalidate()
     }
 
-    /** Подписка на нажатие */
     fun setOnPlaybackToggleListener(listener: () -> Unit) {
         onPlaybackToggle = listener
     }

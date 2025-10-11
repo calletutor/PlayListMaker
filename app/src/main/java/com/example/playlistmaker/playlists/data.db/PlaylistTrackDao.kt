@@ -41,6 +41,4 @@ interface PlaylistTrackDao {
 
     @Delete
     suspend fun deleteCrossRef(crossRef: PlaylistTrackCrossRef)
-
-
 }

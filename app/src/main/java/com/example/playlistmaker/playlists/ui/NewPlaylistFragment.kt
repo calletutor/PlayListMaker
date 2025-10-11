@@ -58,13 +58,9 @@ class NewPlaylistFragment : Fragment() {
 
         val playlistId = args.playlistId
 
-//        if (playlistId != 0L) {
         if (playlistId != -1L) {
-            // Режим редактирования
             binding.buttonCreatePlaylist.text = "Сохранить"
-            // можешь дополнительно загрузить данные плейлиста по ID и отобразить
         } else {
-            // Режим создания
             binding.buttonCreatePlaylist.text = "Создать"
         }
 
@@ -74,11 +70,9 @@ class NewPlaylistFragment : Fragment() {
                 override fun handleOnBackPressed() {
 
                     if (playlistId != -1L) {
-                        //редактирование существующего плейлиста
                         val stop = 1
                         findNavController().popBackStack()
                     }else{
-                        //новый плейлист
                         if (hasUnsavedChanges()) {
                             showExitConfirmationDialog()
                         } else {
@@ -92,11 +86,9 @@ class NewPlaylistFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
 
             if (playlistId != -1L) {
-                //редактирование существующего плейлиста
                 val stop = 1
                 findNavController().popBackStack()
             } else {
-                //новый плейлист
                 if (hasUnsavedChanges()) {
                     showExitConfirmationDialog()
                 } else {
@@ -123,7 +115,6 @@ class NewPlaylistFragment : Fragment() {
                 description = description,
                 imageUri = selectedImageUri,
                 id = args.playlistId.takeIf { it != -1L }
-//                id = args.playlistId.takeIf { it != 0L }
             )
 
         }
