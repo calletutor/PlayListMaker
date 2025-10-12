@@ -87,21 +87,16 @@ class PlaylistRepositoryImpl(
 
     override suspend fun removeTrackFromPlaylist(trackId: String, playlistId: Long) {
 
-
-        // Преобразуем trackId в Int, если требуется, чтобы соответствовать типу данных в crossRef.
         val crossRef = PlaylistTrackCrossRef(
             playlistId = playlistId,
             trackId = trackId.toInt()
         )
 
-        // Удаляем связь между плейлистом и треком.
         playlistTrackDao.deleteCrossRef(crossRef)
 
-        // После удаления связи получаем обновленные данные плейлиста вместе с его треками.
         val playlistWithTracks = playlistTrackDao.getPlaylistWithTracks(playlistId)
         val updatedTrackCount = playlistWithTracks?.tracks?.size ?: 0
 
-        // Обновляем счетчик треков в плейлисте, создавая копию сущности с новым значением.
         playlistWithTracks?.playlist?.copy(tracksCount = updatedTrackCount)?.let { updatedPlaylist ->
             playlistDao.updatePlaylist(updatedPlaylist)
         }

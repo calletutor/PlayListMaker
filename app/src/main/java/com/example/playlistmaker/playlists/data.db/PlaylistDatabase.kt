@@ -39,7 +39,7 @@ abstract class PlaylistDatabase : RoomDatabase() {
                     context.applicationContext,
                     PlaylistDatabase::class.java,
                     "playlist_database"
-                ).fallbackToDestructiveMigration() // для обновления схемы без миграции
+                ).fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

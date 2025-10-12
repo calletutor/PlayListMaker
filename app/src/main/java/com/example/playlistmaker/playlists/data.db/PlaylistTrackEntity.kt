@@ -8,7 +8,6 @@ data class PlaylistTrackEntity(
     @PrimaryKey
     val trackId: Int,
     var isFavorite: Boolean,
-//    var isFavorite: Boolean = false,
     val previewUrl: String?,
     val trackName: String,
     val artistName: String,

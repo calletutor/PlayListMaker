@@ -106,9 +106,18 @@ class MusicService : Service(), MusicServiceController {
     override fun releasePlayer() {
         playerInteractor.release()
         timerJob?.cancel()
+        currentTimeLiveData.postValue("00:00")
+        isPlayingLiveData.postValue(false)
         stopForeground(true)
         stopSelf()
     }
+
+//    override fun releasePlayer() {
+//        playerInteractor.release()
+//        timerJob?.cancel()
+//        stopForeground(true)
+//        stopSelf()
+//    }
 
     override fun getCurrentPosition(): Int = playerInteractor.getCurrentPosition()
 
@@ -187,4 +196,5 @@ class MusicService : Service(), MusicServiceController {
     override fun setCurrentTrack(track: Track) {
         currentTrack = track
     }
+
 }

@@ -38,10 +38,8 @@ class PlayerViewModel(
 
     var currentTrack: Track? = null
     var musicService: MusicServiceController? = null
-//    var musicService: MusicService? = null
 
     fun bindService(service: MusicServiceController) {
-//    fun bindService(service: MusicService) {
         musicService = service
         service.isPlayingLiveData.observeForever { isPlaying ->
             _uiState.postValue(_uiState.value?.copy(isPlaying = isPlaying))
@@ -59,7 +57,6 @@ class PlayerViewModel(
     fun preparePlayer(track: Track) {
         currentTrack = track
 
-        // передаём трек в сервис
         musicService?.setCurrentTrack(track)
 
         viewModelScope.launch {
@@ -80,7 +77,7 @@ class PlayerViewModel(
                         )
                     )
                 },
-                track = track // теперь сюда тоже идёт трек
+                track = track
             )
         }
     }

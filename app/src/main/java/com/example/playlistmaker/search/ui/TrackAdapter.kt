@@ -27,7 +27,6 @@ class TrackAdapter(
         holder.bind(tracks.get(position))
         holder.itemView.setOnClickListener { clickListener.onTrackClick(tracks.get(position)) }
 
-//        holder.itemView.setOnClickListener { onTrackClick(track) }
         holder.itemView.setOnLongClickListener {
             longClickListener.onTrackClick(tracks.get(position))
             true
