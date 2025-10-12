@@ -207,7 +207,14 @@ fun SelectedTracksScreen(
                 modifier = Modifier.size(120.dp)
             )
 
-            Text(fontSize = 20.sp, text = stringResource(id = R.string.media_library_is_empty))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                fontSize = 20.sp,
+                text = stringResource(id = R.string.media_library_is_empty),
+                color = colorResource(id = R.color.dual_color),
+                textAlign = TextAlign.Center
+            )
         }
 
     } else {

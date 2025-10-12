@@ -28,6 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -422,23 +423,34 @@ fun TrackItem(track: Track, onClick: () -> Unit, onLongClick: () -> Unit) {
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
+
             ) {
+
                 androidx.compose.material3.Text(
                     text = track.trackName,
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.dual_color3),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+
+                    )
 
                 Row {
-                    androidx.compose.material3.Text(
-                        text = track.artistName,
-                        fontSize = 11.sp,
-                        color = colorResource(id = R.color.dual_color2),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Box(
+                        modifier = Modifier
+                            .widthIn(max = 150.dp)
+                    ) {
+                        androidx.compose.material3.Text(
+                            text = track.artistName,
+                            fontSize = 11.sp,
+                            color = colorResource(id = R.color.dual_color2),
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+
+                        )
+                    }
 
                     androidx.compose.material3.Icon(
                         painter = painterResource(id = R.drawable.ellipse),
@@ -456,10 +468,10 @@ fun TrackItem(track: Track, onClick: () -> Unit, onLongClick: () -> Unit) {
                         ).format(track.trackTimeMillis.toLong()),
                         fontSize = 11.sp,
                         color = colorResource(id = R.color.dual_color2),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1
+
                     )
-
-
                 }
             }
 
